@@ -1,0 +1,12 @@
+{
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+	STICK: { checked: stick-down, up: stick-up },
+	BALL_AND_STICK: { checked: ballAndStick-down, up: ballAndStick-up },
+	SPACE_FILLING: { checked: spaceFilling-down, up: spaceFilling-up },
+		
+	AJUDA:{up: ajuda},
+	INFO:{up: info},
+	VOLTAR:{up: voltar},
+	
+},
+}

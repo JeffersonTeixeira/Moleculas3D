@@ -1,0 +1,3 @@
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle:{
+button:{down:button.png, up:button.png}
+}
