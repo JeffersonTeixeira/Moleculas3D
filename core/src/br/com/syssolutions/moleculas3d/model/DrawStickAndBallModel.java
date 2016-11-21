@@ -28,7 +28,7 @@ import com.badlogic.gdx.utils.Array;
  * Created by jefferson on 09/11/16.
  */
 
-public class DrawStickAndBallsModel {
+public class DrawStickAndBallModel {
 
     private static final String ESFERA_PATCH = "sphere.obj";
     private static final String STICK_PATCH = "single.obj";
@@ -38,7 +38,7 @@ public class DrawStickAndBallsModel {
     private Array<ModelInstance> instances;
 
 
-    public DrawStickAndBallsModel(Molecula molecula) {
+    public DrawStickAndBallModel(Molecula molecula) {
         manager = new AssetManager();
         this.molecula = molecula;
         instances = new Array<ModelInstance>();
@@ -164,7 +164,7 @@ public class DrawStickAndBallsModel {
             ligacaoInstance.transform.setToTranslation(primeiro.x, primeiro.y, primeiro.z);
             ligacaoInstance.transform.scale(1, v, 1);
             //ligacaoInstance.transform.setToLookAt(vetorDirecao);
-            ligacaoInstance.transform.setToRotation(vx,-vy,0f,(float)ax);
+            //ligacaoInstance.transform.setToRotation(vx,-vy,0f,(float)ax);
 
 
             this.instances.add(ligacaoInstance);

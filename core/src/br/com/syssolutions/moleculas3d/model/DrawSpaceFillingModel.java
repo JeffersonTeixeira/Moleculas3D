@@ -53,6 +53,7 @@ public class DrawSpaceFillingModel {
             this.instances.get(i).materials.get(0).set(ColorAttribute.createDiffuse(r, g, b, a));
         }
 
+
         return this.instances;
 
     }

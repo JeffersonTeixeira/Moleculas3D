@@ -9,7 +9,7 @@ public enum Visualizacao {
     LINE,
     SPACE_FILLING,
     STICK,
-    STICK_AND_BALLS
+    STICK_AND_BALL
 
 
 }

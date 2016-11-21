@@ -26,14 +26,14 @@ import br.com.syssolutions.moleculas3d.control.states.GameStateManager;
 import br.com.syssolutions.moleculas3d.control.states.State;
 import br.com.syssolutions.moleculas3d.model.Atomo;
 import br.com.syssolutions.moleculas3d.model.DrawSpaceFillingModel;
-import br.com.syssolutions.moleculas3d.model.DrawStickAndBallsModel;
+import br.com.syssolutions.moleculas3d.model.DrawStickAndBallModel;
 import br.com.syssolutions.moleculas3d.model.Ligacao;
 import br.com.syssolutions.moleculas3d.model.Molecula;
 import br.com.syssolutions.moleculas3d.model.Visualizacao;
 
 import static br.com.syssolutions.moleculas3d.model.Visualizacao.SPACE_FILLING;
 import static br.com.syssolutions.moleculas3d.model.Visualizacao.STICK;
-import static br.com.syssolutions.moleculas3d.model.Visualizacao.STICK_AND_BALLS;
+import static br.com.syssolutions.moleculas3d.model.Visualizacao.STICK_AND_BALL;
 
 /**
  * Created by jefferson on 17/10/16.
@@ -45,7 +45,7 @@ public class Visualizador3DState extends State {
 
     Molecula molecula;
 
-    private Visualizacao visualizacao; //(LINE,    SPACE_FILLING,    STICK,    STICK_AND_BALLS)
+    private Visualizacao visualizacao; //(LINE,    SPACE_FILLING,    STICK,    STICK_AND_BALL)
 
     public CameraInputController camController;
     public ModelBatch modelBatch;
@@ -166,7 +166,7 @@ public class Visualizador3DState extends State {
         stickAndBallBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                visualizacao = STICK_AND_BALLS;
+                visualizacao = STICK_AND_BALL;
                 loading = true;
             }
         });
@@ -201,7 +201,7 @@ public class Visualizador3DState extends State {
     private void loadStickBallModel() {
 
         instances.clear();
-        instances = new DrawStickAndBallsModel(molecula).getModel();
+        instances = new DrawStickAndBallModel(molecula).getModel();
         loading = false;
     }
 
@@ -228,7 +228,7 @@ public class Visualizador3DState extends State {
                 camController.update();
                 break;
 
-            case STICK_AND_BALLS:
+            case STICK_AND_BALL:
 
                 if (loading)
                     loadStickBallModel();
