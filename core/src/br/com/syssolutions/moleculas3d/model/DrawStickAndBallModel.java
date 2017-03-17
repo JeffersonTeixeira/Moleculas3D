@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.CylinderShapeBuilder;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -58,7 +59,7 @@ public class DrawStickAndBallModel {
                     molecula.atomos.get(i).y,
                     molecula.atomos.get(i).z);
 
-            //Defonir tamanho do Átomo
+            //Definir tamanho do Átomo
             float raioAtomico;
             raioAtomico = molecula.atomos.get(i).getRaioAtomico(molecula.atomos.get(i).simbolo) / 2;
             sphereInstace.transform.scale(raioAtomico, raioAtomico, raioAtomico);
@@ -85,189 +86,23 @@ public class DrawStickAndBallModel {
             Atomo primeiro = lig.primeiroAtomo;
             Atomo segundo = lig.segundoAtomo;
 
-
-            float v1x,v1y,v1z, v2x, v2y, v2z;
-
-            v1x= primeiro.x;
-            v1y=primeiro.y;
-            v1z= primeiro.z;
-
-            v2x= segundo.x;
-            v2y=segundo.y;
-            v2z= segundo.z;
+            Vector3 posA = new Vector3(primeiro.x,primeiro.y,primeiro.z);
+            Vector3 posB= new Vector3(segundo.x,segundo.y,segundo.z);
 
 
-            float v, vx, vy, vz;
 
-            vx = v2x-v1x;
-            vy =  v2y-v1y;
-            vz =  v2z-v1z;
-
-
-            //handle the degenerate case of z1 == z2 with an approximation
-
-            if (vz > -0.000001 && vz < 0.000001) {
-
-                if (vz >= 0.0) {
-
-                    vz = 0.000001f;
-
-                } else {
-
-                    vz = -0.000001f;
-
-                }
-
-            }
-
-
-            if (vy > -0.000001 && vy < 0.000001) {
-
-                if (vy >= 0.0) {
-
-                    vy = -0.000001f;
-
-                } else {
-
-                    vy = 0.000001f;
-
-                }
-
-            }
-
-
-            if (vx > -0.000001 && vx < 0.000001) {
-
-                if (vx >= 0.0) {
-
-                    vx = 0.000001f;
-
-                } else {
-
-                    vx = -0.000001f;
-
-                }
-
-            }
-
-
-            v = (float) Math.sqrt(vx * vx + vy * vy + vz * vz);
-
-            double ax = (180 / Math.PI) * Math.acos(vz / v);
-
-
-            if (vz < 0.0) ax = -ax;
-
+            Vector3 v3 = posA.cpy().add(posB).scl(0.5f);
+            Vector3 v4 = posB.cpy().sub(v3).nor();
+            Vector3 v5 = v4.cpy().nor().crs(Vector3.Y).nor();
 
             ModelInstance ligacaoInstance = new ModelInstance(bond);
-            //ligacaoInstance.materials.get(0).set(ColorAttribute.createDiffuse());
-            ligacaoInstance.transform.setToTranslation(primeiro.x, primeiro.y, primeiro.z);
-            ligacaoInstance.transform.scale(1, v, 1);
-            //ligacaoInstance.transform.setToLookAt(vetorDirecao);
-            //ligacaoInstance.transform.setToRotation(vx,-vy,0f,(float)ax);
 
+            ligacaoInstance.transform.translate(posA);
+
+            ligacaoInstance.transform.rotate(v5,
+                    -(float) Math.toDegrees(Math.acos(v4.dot(Vector3.Y))));
 
             this.instances.add(ligacaoInstance);
-
-
-//            Model lineModel;
-//
-//            ModelBuilder modelBuilderline = new ModelBuilder();
-//            modelBuilderline.begin();
-//            MeshPartBuilder builder = modelBuilderline.part("teste", 1, 3, new Material());
-//            builder.line(primeiro.x, primeiro.y, primeiro.z, segundo.x, segundo.y, segundo.z);
-//
-//            lineModel = modelBuilderline.end();
-//            ModelInstance lineInstance = new ModelInstance(lineModel);
-//
-//
-//
-//            instances.add(lineInstance);
-
-
-/*
-
-            Model cylModel;
-
-            ModelBuilder modelBuilder = new ModelBuilder();
-            modelBuilder.begin();
-            CylinderShapeBuilder ligacaoteste = new CylinderShapeBuilder();
-            MeshPartBuilder builder = modelBuilder.part("teste", 1, 3, new Material());
-            ligacaoteste.build(builder, 1f, 1f, 1f, 2);
-
-            cylModel = modelBuilder.end();
-            ModelInstance ligacaoInstance = new ModelInstance(cylModel);
-
-
-            instances.add(ligacaoInstance);
-            */
-
-
-//
-//
-//            ModelBuilder modelBuilder = new ModelBuilder();
-//            MeshBuilder meshBuilder = new MeshBuilder();
-//
-//            meshBuilder.begin(1,3);
-//            meshBuilder.cylinder(4f, 6f, 4f, 16);
-//            Mesh cylinder1 = meshBuilder.end();
-//
-//            meshBuilder.begin(1,3);
-//            meshBuilder.cylinder(4f, 6f, 4f, 16);
-//            Mesh cylinder2 = meshBuilder.end();
-//
-//
-//            modelBuilder.begin();
-//
-//            modelBuilder.part("cylinder1",
-//                    cylinder1,
-//                    Usage.Position | Usage.Normal | Usage.TextureCoordinates,
-//                    new Material(
-//                          //  TextureAttribute.createDiffuse(),
-//                            ColorAttribute.createSpecular(1,1,1,1),
-//                            FloatAttribute.createShininess(8f)));
-//
-//            modelBuilder.part("cylinder2",
-//                    cylinder2,
-//                    Usage.Position | Usage.Normal | Usage.TextureCoordinates,
-//                    new Material(
-//                            //TextureAttribute.createDiffuse(red),
-//                            ColorAttribute.createSpecular(1,1,1,1),
-//                            FloatAttribute.createShininess(8f)))
-//                    .mesh.transform(new Matrix4().translate(0, 0, -2f));
-//
-//            Model finalCylinder = modelBuilder.end();
-//
-//            ModelInstance cilindro = new ModelInstance(finalCylinder);
-
-//
-//            ModelBuilder modelBuilder = new ModelBuilder();
-//
-//            modelBuilder.begin();
-//
-//            MeshPartBuilder meshBuilder;
-//
-//            meshBuilder = modelBuilder.part("p1", GL20.GL_TRIANGLES, Usage.Position | Usage.Normal,
-//                    new Material(
-//                            ColorAttribute.createDiffuse(Color.RED)
-//                    ));
-//
-//            CylinderShapeBuilder cylinderShapeBuilder = new CylinderShapeBuilder();
-//            cylinderShapeBuilder.build(meshBuilder, 0.5f, distanceBetween, 0, 30);
-//            Model cylindroTeste = modelBuilder.end();
-
-
-            // Model teste = cylindroTeste;
-
-
-            //  ModelInstance testeinstance = new ModelInstance(teste);
-            //testeinstance.transform.setToLookAt(primeiro.x,primeiro.y,primeiro.z);
-
-//cylinderShapeBuilder.build();
-
-
-            // instances.add(testeinstance);
-
 
         }
 
