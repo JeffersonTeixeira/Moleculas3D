@@ -61,7 +61,7 @@ public class DrawStickAndBallModel {
 
             //Definir tamanho do Átomo
             float raioAtomico;
-            raioAtomico = molecula.atomos.get(i).getRaioAtomico(molecula.atomos.get(i).simbolo) / 2;
+            raioAtomico = molecula.atomos.get(i).getRaioAtomico(molecula.atomos.get(i).simbolo) / 1.4f;
             sphereInstace.transform.scale(raioAtomico, raioAtomico, raioAtomico);
 
             this.instances.add(sphereInstace);
@@ -95,14 +95,57 @@ public class DrawStickAndBallModel {
             Vector3 v4 = posB.cpy().sub(v3).nor();
             Vector3 v5 = v4.cpy().nor().crs(Vector3.Y).nor();
 
-            ModelInstance ligacaoInstance = new ModelInstance(bond);
+            ModelInstance ligacaoInstanceA = new ModelInstance(bond);
+            //float distancia = v1.dst(v2);
 
-            ligacaoInstance.transform.translate(posA);
+            //ligacaoInstance.transform
 
-            ligacaoInstance.transform.rotate(v5,
+            float[] cores = lig.primeiroAtomo.getCor();
+            float r = cores[0];
+            float g = cores[1];
+            float b = cores[2];
+            float a = cores[3];
+
+            ligacaoInstanceA.materials.get(0).set(ColorAttribute.createDiffuse(r, g, b, a));
+
+
+
+            //ligacaoInstanceA.transform.scl(0.9f,posA.dst(posB)/2,0.9f);
+            ligacaoInstanceA.transform.translate(posA);
+
+
+            ligacaoInstanceA.transform.rotate(v5,
                     -(float) Math.toDegrees(Math.acos(v4.dot(Vector3.Y))));
 
-            this.instances.add(ligacaoInstance);
+
+
+            this.instances.add(ligacaoInstanceA);
+
+
+
+//            ModelInstance ligacaoInstance2 = new ModelInstance(bond);
+//            ligacaoInstance2.transform.translate(posA);
+//            ligacaoInstance2.transform.scale(0.9f,posA.dst(posB)/2,0.9f);
+//
+//
+//
+//            ModelInstance ligacaoInstance3 = new ModelInstance(bond);
+//            ligacaoInstance3.transform.translate(
+//                    posA.x,
+//                    ligacaoInstance2.transform.getScaleY(),
+//                    posA.z);
+//
+//
+//            ligacaoInstance3.materials.get(0).set(ColorAttribute.createDiffuse(0, 0, 0, a));
+//
+//
+//
+//
+//            this.instances.add(ligacaoInstance2);
+//
+//
+//            this.instances.add(ligacaoInstance3);
+
 
         }
 
