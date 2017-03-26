@@ -43,7 +43,7 @@ public class Visualizador3DState extends State {
 
     private final float BUTTONSIZE = Gdx.graphics.getWidth() / 8; //média de 12% da largura da tela
 
-    Molecula molecula;
+    static Molecula molecula;
 
     private Visualizacao visualizacao; //(LINE,    SPACE_FILLING,    STICK,    STICK_AND_BALL)
 
@@ -70,9 +70,13 @@ public class Visualizador3DState extends State {
     private Button infobtn;
 
 
+    public static void setMolecula(Molecula molecula) {
+        Visualizador3DState.molecula = molecula;
+    }
+
     public Visualizador3DState(GameStateManager gsm) {
         super(gsm);
-        molecula = criaMoleculaAgua();
+        //molecula = criaMoleculaAgua();
 
         modelBatch = new ModelBatch();
 

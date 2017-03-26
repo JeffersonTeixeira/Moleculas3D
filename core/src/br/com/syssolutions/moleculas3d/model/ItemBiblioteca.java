@@ -5,14 +5,9 @@ package br.com.syssolutions.moleculas3d.model;
  */
 
 public class ItemBiblioteca {
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private String name;
+    private String filename;
+    private String patch;
 
     public String getPatch() {
         return patch;
@@ -22,14 +17,36 @@ public class ItemBiblioteca {
         this.patch = patch;
     }
 
-    private String name;
-    private String patch;
 
-public ItemBiblioteca(String name, String patch){
-    this.name=name;
-    this.patch=patch;
-}
+    public String getFilename() {
+        return filename;
+    }
 
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    public ItemBiblioteca(String patch, String filename) {
+        this.patch = patch+filename;
+        this.filename = filename;
+
+    }
+
+
+    public ItemBiblioteca(String patch, String filename, String name) {
+        this.patch = patch+filename;
+        this.name = name;
+        this.filename = filename;
+    }
 
 
 }

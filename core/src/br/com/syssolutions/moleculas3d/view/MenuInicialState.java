@@ -19,10 +19,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import br.com.syssolutions.moleculas3d.model.Biblioteca;
 import br.com.syssolutions.moleculas3d.model.FontGenerator;
+import br.com.syssolutions.moleculas3d.model.Molecula;
 import br.com.syssolutions.moleculas3d.model.Moleculas3D;
 import br.com.syssolutions.moleculas3d.control.states.GameStateManager;
 import br.com.syssolutions.moleculas3d.control.states.State;
+import br.com.syssolutions.moleculas3d.model.ReadMoleculaXML;
 
 public class MenuInicialState extends State {
 
@@ -58,6 +61,7 @@ public class MenuInicialState extends State {
         carregaTituloApp();
 
         carregaBotoes();
+
 
     }
 
@@ -114,14 +118,31 @@ public class MenuInicialState extends State {
         btCartaoSD.addListener((new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+
+
+                try {
+
+
+                    Molecula mol = ReadMoleculaXML.read(Biblioteca.getBiblioteca().get(1));
+
+                    Visualizador3DState.setMolecula(mol);
+
+
+                    System.out.println("carregou molécula pelo menu Inicial");
+                } catch (Exception e) {
+                    System.out.println("Falha ao carregar molécula pelo menu Inicial" + e);
+                }
                 gsm.set(new Visualizador3DState(gsm));
+                dispose();
+
             }
         }));
 
         btBiblioteca.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gsm.moleculas3D.moleculas3DCallBack.startActivity();
+                gsm.set(new ListMolBibliotecaState(gsm));
+                dispose();
             }
         });
 
@@ -139,7 +160,7 @@ public class MenuInicialState extends State {
 
         labelTitulo = new Label("Moléculas3D", labelStyle);
         labelTitulo.setPosition(((Gdx.graphics.getWidth() / 2) - (labelTitulo.getWidth() / 2)),
-                Gdx.graphics.getHeight()-btnAltura);
+                Gdx.graphics.getHeight() - btnAltura);
 
         stage.addActor(labelTitulo);
     }
@@ -147,8 +168,9 @@ public class MenuInicialState extends State {
     @Override
     public void dispose() {
         background.dispose();
-        skin.dispose();
         stage.dispose();
+        skin.dispose();
+
 
     }
 
