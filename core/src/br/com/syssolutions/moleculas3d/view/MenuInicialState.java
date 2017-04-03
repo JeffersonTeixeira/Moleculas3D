@@ -29,18 +29,19 @@ import br.com.syssolutions.moleculas3d.model.ReadMoleculaXML;
 
 public class MenuInicialState extends State {
 
-    private float btnAltura = (Gdx.graphics.getHeight() / 8); // Tela dividida em 8 partes
-    private float btnLargura = ((Gdx.graphics.getWidth() * (0.85f)));// botões ocupando 85% da largura da tela
+    private float btnAltura = Gdx.graphics.getHeight() / 8; // Tela dividida em 8 partes
+    private float btnLargura = (Gdx.graphics.getWidth() * (0.85f));// botões ocupando 85% da largura da tela
 
     private Stage stage;
 
     private Skin skin;
     private Texture background;
-
+    private Pixmap btPixmap;
     private Label labelTitulo;
 
     private TextButton btBiblioteca;
     private TextButton btCartaoSD;
+
 
     private OrthographicCamera camOrtho;
 
@@ -94,7 +95,7 @@ public class MenuInicialState extends State {
         skin.add("btnFont", new FontGenerator(120, "Vera.ttf", null).getFont());
 
         //Textura dos botões:
-        Pixmap btPixmap = new Pixmap((int) btnLargura, (int) btnAltura, Pixmap.Format.RGB888);
+        btPixmap = new Pixmap((int) btnLargura, (int) btnAltura, Pixmap.Format.RGB888);
         skin.add("btBackground", new Texture(btPixmap));
 
         //Layout do botão:
@@ -123,7 +124,7 @@ public class MenuInicialState extends State {
                 try {
 
 
-                    Molecula mol = ReadMoleculaXML.read(Biblioteca.getBiblioteca().get(1));
+                    Molecula mol = ReadMoleculaXML.read(Biblioteca.getBiblioteca().get(242));
 
                     Visualizador3DState.setMolecula(mol);
 
@@ -170,6 +171,7 @@ public class MenuInicialState extends State {
         background.dispose();
         stage.dispose();
         skin.dispose();
+        btPixmap.dispose();
 
 
     }
