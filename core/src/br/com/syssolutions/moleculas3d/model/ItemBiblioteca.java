@@ -38,6 +38,7 @@ public class ItemBiblioteca {
     public ItemBiblioteca(String patch, String filename) {
         this.patch = patch+filename;
         this.filename = filename;
+        this.name=filename;
 
     }
 

@@ -8,14 +8,21 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.Array;
+
+import java.util.ArrayList;
 
 import br.com.syssolutions.moleculas3d.control.states.GameStateManager;
 import br.com.syssolutions.moleculas3d.control.states.State;
+import br.com.syssolutions.moleculas3d.model.Biblioteca;
 import br.com.syssolutions.moleculas3d.model.FontGenerator;
+import br.com.syssolutions.moleculas3d.model.ItemBiblioteca;
 import br.com.syssolutions.moleculas3d.model.Moleculas3D;
+import br.com.syssolutions.moleculas3d.model.ReadMoleculaXML;
 
 /**
  * Created by jefferson on 19/03/17.
@@ -30,9 +37,10 @@ public class ListMolBibliotecaState extends State {
     private Skin skin;
     private Pixmap btPixmap;
     private float alturaTextField = Gdx.graphics.getHeight() / 10;
-    private float larguraTextField =(Gdx.graphics.getWidth() * (0.75f));
+    private float larguraTextField = (Gdx.graphics.getWidth() * (0.75f));
 
     private ScrollPane scrollPane;
+    private List programList;
 
     public ListMolBibliotecaState(GameStateManager gsm) {
         super(gsm);
@@ -45,7 +53,6 @@ public class ListMolBibliotecaState extends State {
         buildStage();
         Gdx.input.setInputProcessor(stage);
 
-        //scrollPane = new ScrollPane();
 
         //ReadMoleculaXML.read();
 //        Molecula mol = new Molecula();
@@ -69,7 +76,7 @@ public class ListMolBibliotecaState extends State {
         stage = new Stage();
         stage.clear();
 
-        skin=new Skin();
+        skin = new Skin();
         skin.add("font", new FontGenerator(120, "Vera.ttf", null).getFont());
 
         //Textura do Texfield:
@@ -77,7 +84,7 @@ public class ListMolBibliotecaState extends State {
         skin.add("texFieldBackground", new Texture(btPixmap));
 
         //Layout do TextField:
-        TextField.TextFieldStyle textFieldStyle= new TextField.TextFieldStyle();
+        TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle();
         textFieldStyle.background = skin.newDrawable("texFieldBackground", 0, 0, 0, 0.6f);
         textFieldStyle.selection = new Image(new Texture("ui-imagens/listmolbiblioteca/selection.png")).getDrawable();
         textFieldStyle.font = skin.getFont("font");
@@ -85,15 +92,54 @@ public class ListMolBibliotecaState extends State {
         textFieldStyle.fontColor = Color.WHITE;
         skin.add("default", textFieldStyle);
 
-        buscaTxField = new TextField("",textFieldStyle);
-        buscaTxField.setMessageText("Buscar");
-        buscaTxField.setSize(larguraTextField,alturaTextField);
+        buscaTxField = new TextField("", textFieldStyle);
+        buscaTxField.setMessageText("Buscar...");
+        buscaTxField.setSize(larguraTextField, alturaTextField);
         buscaTxField.setPosition(((Gdx.graphics.getWidth() / 2) - (buscaTxField.getWidth() / 2)),
                 Gdx.graphics.getHeight() - alturaTextField);
 
 
         stage.addActor(buscaTxField);
 
+
+        Skin skin2 = new Skin();
+
+        ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
+        //style.vScrollKnob = skin.newDrawable("texFieldBackground", 0, 0, 0, 0.6f);
+
+        //style.vScroll = new Image(new Texture("ui-imagens/listmolbiblioteca/selection.png")).getDrawable();
+        skin2.add("default", style);
+
+        List.ListStyle listStyle = new List.ListStyle();
+        listStyle.font = new FontGenerator(90, "Vera.ttf", null).getFont();
+        //listStyle.fontColorSelected = Color.BLACK;
+        //listStyle.fontColorUnselected = Color.BLUE;
+        listStyle.selection = new Image(new Texture("ui-imagens/listmolbiblioteca/selection.png")).getDrawable();
+
+
+        scrollPane = new ScrollPane(null, skin2);
+        scrollPane.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - alturaTextField);
+        programList = new List<String>(listStyle);
+
+
+        Array<String> lista = new Array<String>();
+
+
+        for (ItemBiblioteca itemBiblioteca : Biblioteca.getBiblioteca()) {
+            lista.add(itemBiblioteca.getName());
+
+        }
+
+
+        programList.setItems(lista);
+
+
+        scrollPane.setWidget(programList);
+        // scrollPane.setFillParent(true);
+
+        stage.addActor(scrollPane);
+
+        
 
 
     }
@@ -108,7 +154,7 @@ public class ListMolBibliotecaState extends State {
 //
 //
 //        }
-
+//        System.out.println(programList.getSelectedIndex());
     }
 
     @Override
