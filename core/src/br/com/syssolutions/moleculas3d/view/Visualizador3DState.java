@@ -1,6 +1,7 @@
 package br.com.syssolutions.moleculas3d.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -28,6 +29,7 @@ import br.com.syssolutions.moleculas3d.model.Atomo;
 import br.com.syssolutions.moleculas3d.model.DrawSpaceFillingModel;
 import br.com.syssolutions.moleculas3d.model.DrawStickAndBallModel;
 import br.com.syssolutions.moleculas3d.model.Ligacao;
+import br.com.syssolutions.moleculas3d.model.ModelResources;
 import br.com.syssolutions.moleculas3d.model.Molecula;
 import br.com.syssolutions.moleculas3d.model.Visualizacao;
 
@@ -58,7 +60,7 @@ public class Visualizador3DState extends State {
     //Itens do menu de configurações:
     private Stage stage;
     private Skin skinVisualizador3D;
-    private TextureAtlas atlasbtnConf;
+
 
     private ButtonGroup visuGroup;
     private Button spaceFillingBtn;
@@ -83,6 +85,9 @@ public class Visualizador3DState extends State {
         visualizacao = SPACE_FILLING;
 
         carregaConfAmbiente();
+
+        //Carrega todos recursos Model (esfera e tipos de ligações)
+        ModelResources.assetsLoad();
 
         cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cam.position.set(7f, 7f, 7f);
@@ -212,7 +217,10 @@ public class Visualizador3DState extends State {
 
     @Override
     protected void handleInput() {
-
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            gsm.set(new ListMolBibliotecaState(gsm));
+            dispose();
+        }
     }
 
     @Override
@@ -269,7 +277,7 @@ public class Visualizador3DState extends State {
         instances.clear();
         stage.dispose();
         skinVisualizador3D.dispose();
-        atlasbtnConf.dispose();
+
 
     }
 

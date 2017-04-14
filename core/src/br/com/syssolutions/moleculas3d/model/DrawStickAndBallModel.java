@@ -13,28 +13,42 @@ import com.badlogic.gdx.utils.Array;
 
 public class DrawStickAndBallModel {
 
-    private static final String ESFERA_PATCH = "sphere.obj";
-    private static final String STICK_PATCH = "single.obj";
+//    private static final String ESFERA_PATCH = "sphere.obj";
+//    private static final String SINGLE_STICK_PATCH = "single.obj";
+//    private static final String DOUBLE_STICK_PATCH = "double.obj";
+//    private static final String TRIPLE_STICK_PATCH = "triple.obj";
+//    private static final String QUAD_STICK_PATCH = "quad.obj";
+//
+//    private static Model SPHERE;
+//    private static Model BOND1;
+//    private static Model BOND2;
+//    private static Model BOND3;
+//    private static Model BOND4;
 
-    private Molecula molecula;
-    private AssetManager manager;
     private Array<ModelInstance> instances;
+    private Molecula molecula;
+
+//    private AssetManager manager;
+//    private static boolean LOADED = false;
 
 
     public DrawStickAndBallModel(Molecula molecula) {
-        manager = new AssetManager();
+     //   manager = new AssetManager();
         this.molecula = molecula;
         instances = new Array<ModelInstance>();
-        assetsLoad();
+
+       // ModelResources.assetsLoad();
+
+      //  assetsLoad();
+
+
     }
 
     public Array<ModelInstance> getModel() {
 
-        Model sphere = manager.get(ESFERA_PATCH, Model.class);
-        Model bond = manager.get(STICK_PATCH, Model.class);
 
         for (int i = 0; i < molecula.atomos.size(); i++) {
-            ModelInstance sphereInstace = new ModelInstance(sphere);
+            ModelInstance sphereInstace = new ModelInstance(ModelResources.getSPHERE());
 
             //Definir posição:
             sphereInstace.transform.setToTranslation(molecula.atomos.get(i).x,
@@ -68,16 +82,35 @@ public class DrawStickAndBallModel {
             Atomo primeiro = lig.primeiroAtomo;
             Atomo segundo = lig.segundoAtomo;
 
-            Vector3 posA = new Vector3(primeiro.x,primeiro.y,primeiro.z);
-            Vector3 posB= new Vector3(segundo.x,segundo.y,segundo.z);
-
+            Vector3 posA = new Vector3(primeiro.x, primeiro.y, primeiro.z);
+            Vector3 posB = new Vector3(segundo.x, segundo.y, segundo.z);
 
 
             Vector3 v3 = posA.cpy().add(posB).scl(0.5f);
             Vector3 v4 = posB.cpy().sub(v3).nor();
             Vector3 v5 = v4.cpy().nor().crs(Vector3.Y).nor();
 
-            ModelInstance ligacaoInstanceA = new ModelInstance(bond);
+
+            ModelInstance ligacaoInstance;
+
+
+            switch (lig.ordemLigacao) {
+                default:
+                    ligacaoInstance = new ModelInstance(ModelResources.getBOND1());
+                    break;
+                case 2:
+                    ligacaoInstance = new ModelInstance(ModelResources.getBOND2());
+                    break;
+                case 3:
+                    ligacaoInstance = new ModelInstance(ModelResources.getBOND3());
+                    break;
+                case 4:
+                    ligacaoInstance = new ModelInstance(ModelResources.getBOND4());
+                    break;
+
+            }
+
+
             //float distancia = v1.dst(v2);
 
             //ligacaoInstance.transform
@@ -88,21 +121,18 @@ public class DrawStickAndBallModel {
             float b = cores[2];
             float a = cores[3];
 
-            ligacaoInstanceA.materials.get(0).set(ColorAttribute.createDiffuse(r, g, b, a));
-
+            ligacaoInstance.materials.get(0).set(ColorAttribute.createDiffuse(r, g, b, a));
 
 
             //ligacaoInstanceA.transform.scl(0.9f,posA.dst(posB)/2,0.9f);
-            ligacaoInstanceA.transform.translate(posA);
+            ligacaoInstance.transform.translate(posA);
 
 
-            ligacaoInstanceA.transform.rotate(v5,
+            ligacaoInstance.transform.rotate(v5,
                     -(float) Math.toDegrees(Math.acos(v4.dot(Vector3.Y))));
 
 
-
-            this.instances.add(ligacaoInstanceA);
-
+            this.instances.add(ligacaoInstance);
 
 
 //            ModelInstance ligacaoInstance2 = new ModelInstance(bond);
@@ -135,12 +165,27 @@ public class DrawStickAndBallModel {
     }
 
 
-    private void assetsLoad() {
-        manager.load(ESFERA_PATCH, Model.class);
-        manager.load(STICK_PATCH, Model.class);
-        manager.finishLoading();
-
-    }
+//    private void assetsLoad() {
+//        if (LOADED == false) {
+//            manager.load(ESFERA_PATCH, Model.class);
+//            manager.load(SINGLE_STICK_PATCH, Model.class);
+//            manager.load(DOUBLE_STICK_PATCH, Model.class);
+//            manager.load(TRIPLE_STICK_PATCH, Model.class);
+//            manager.load(QUAD_STICK_PATCH, Model.class);
+//
+//            manager.finishLoading();
+//
+//            SPHERE = manager.get(ESFERA_PATCH, Model.class);
+//            BOND1 = manager.get(SINGLE_STICK_PATCH, Model.class);
+//            BOND2 = manager.get(DOUBLE_STICK_PATCH, Model.class);
+//            BOND3 = manager.get(TRIPLE_STICK_PATCH, Model.class);
+//            BOND4 = manager.get(QUAD_STICK_PATCH, Model.class);
+//
+//
+//        }
+//        LOADED = true;
+//
+//    }
 
 
 }

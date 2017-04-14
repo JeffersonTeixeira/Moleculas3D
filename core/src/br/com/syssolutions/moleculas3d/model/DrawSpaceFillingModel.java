@@ -13,24 +13,27 @@ import com.badlogic.gdx.utils.Array;
 public class DrawSpaceFillingModel {
 
     private Molecula molecula;
-   AssetManager manager;
+    //AssetManager manager;
     private Array<ModelInstance> instances;
-    private static final String ESFERA_PATCH = "sphere.obj";
+   // private static final String ESFERA_PATCH = "sphere.obj";
 
     public DrawSpaceFillingModel(Molecula molecula) {
 
-        manager = new AssetManager();
+      //  manager = new AssetManager();
         this.molecula = molecula;
         instances = new Array<ModelInstance>();
-        assetsLoad();
+
+      //  ModelResources.assetsLoad();
+
+        //assetsLoad();
     }
 
     public Array<ModelInstance> getModel() {
 
-        Model sphere = manager.get(ESFERA_PATCH, Model.class);
+   //     Model sphere = manager.get(ESFERA_PATCH, Model.class);
 
         for (int i = 0; i < molecula.atomos.size(); i++) {
-            ModelInstance sphereInstace = new ModelInstance(sphere);
+            ModelInstance sphereInstace = new ModelInstance(ModelResources.getSPHERE());
 
             //Definir posição:
             sphereInstace.transform.setToTranslation(molecula.atomos.get(i).x,
@@ -39,7 +42,7 @@ public class DrawSpaceFillingModel {
 
             //Definir tamanho do Átomo
             float raioAtomico;
-            raioAtomico=molecula.atomos.get(i).getRaioAtomico(molecula.atomos.get(i).simbolo);
+            raioAtomico = molecula.atomos.get(i).getRaioAtomico(molecula.atomos.get(i).simbolo);
             sphereInstace.transform.scale(raioAtomico, raioAtomico, raioAtomico);
 
             this.instances.add(sphereInstace);
@@ -58,10 +61,10 @@ public class DrawSpaceFillingModel {
 
     }
 
-    private void assetsLoad() {
-        manager.load(ESFERA_PATCH, Model.class);
-        //manager.update();
-        manager.finishLoading();
-    }
+//    private void assetsLoad() {
+//        manager.load(ESFERA_PATCH, Model.class);
+//        //manager.update();
+//        manager.finishLoading();
+//    }
 
 }

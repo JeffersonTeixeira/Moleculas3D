@@ -56,6 +56,7 @@ public class MenuInicialState extends State {
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+        Gdx.input.setCatchBackKey(true);
 
         skin = new Skin();
 

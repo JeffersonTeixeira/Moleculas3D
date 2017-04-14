@@ -1,11 +1,13 @@
 package br.com.syssolutions.moleculas3d.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -13,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntFloatMap;
 
 import java.util.ArrayList;
 
@@ -21,6 +24,7 @@ import br.com.syssolutions.moleculas3d.control.states.State;
 import br.com.syssolutions.moleculas3d.model.Biblioteca;
 import br.com.syssolutions.moleculas3d.model.FontGenerator;
 import br.com.syssolutions.moleculas3d.model.ItemBiblioteca;
+import br.com.syssolutions.moleculas3d.model.Molecula;
 import br.com.syssolutions.moleculas3d.model.Moleculas3D;
 import br.com.syssolutions.moleculas3d.model.ReadMoleculaXML;
 
@@ -52,7 +56,6 @@ public class ListMolBibliotecaState extends State {
 
         buildStage();
         Gdx.input.setInputProcessor(stage);
-
 
         //ReadMoleculaXML.read();
 //        Molecula mol = new Molecula();
@@ -131,15 +134,23 @@ public class ListMolBibliotecaState extends State {
         }
 
 
+
         programList.setItems(lista);
 
 
         scrollPane.setWidget(programList);
         // scrollPane.setFillParent(true);
 
-        stage.addActor(scrollPane);
+       //scrollPane.cancelTouchFocus();
 
-        
+
+
+
+
+
+
+
+        stage.addActor(scrollPane);
 
 
     }
@@ -147,14 +158,53 @@ public class ListMolBibliotecaState extends State {
 
     @Override
     protected void handleInput() {
-//        if (Gdx.input.isTouched()) {
-//            System.out.println("Tela foi tocada");
-//            dispose();
-//            gsm.set(new Visualizador3DState(gsm));
+
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            gsm.set(new MenuInicialState(gsm));
+            dispose();
+        }
+
+
+        System.out.println(scrollPane.isDragging());
+
+
+
+
+//        if(scrollPane.isDragging()){
 //
-//
-//        }
-//        System.out.println(programList.getSelectedIndex());
+//            System.out.println("Rolando!!!");
+
+
+     //   }
+        if (Gdx.input.isTouched(1)) {
+
+            if(scrollPane.isDragging()){
+
+                System.out.println("Rolando!!!");
+
+
+            }
+
+
+
+
+
+            try {
+
+                Molecula mol = ReadMoleculaXML.read(Biblioteca.getBiblioteca().get(programList.getSelectedIndex()));
+
+                Visualizador3DState.setMolecula(mol);
+
+            } catch (Exception e) {
+                System.out.println("Falha ao carregar molécula" + e);
+            }
+            gsm.set(new Visualizador3DState(gsm));
+            dispose();
+
+        }
+
+
+
     }
 
     @Override
