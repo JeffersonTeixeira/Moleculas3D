@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -15,14 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntFloatMap;
-
-import java.util.ArrayList;
 
 import br.com.syssolutions.moleculas3d.control.states.GameStateManager;
 import br.com.syssolutions.moleculas3d.control.states.State;
 import br.com.syssolutions.moleculas3d.model.Biblioteca;
-import br.com.syssolutions.moleculas3d.model.FontGenerator;
+import br.com.syssolutions.moleculas3d.Utils.FontGenerator;
 import br.com.syssolutions.moleculas3d.model.ItemBiblioteca;
 import br.com.syssolutions.moleculas3d.model.Molecula;
 import br.com.syssolutions.moleculas3d.model.Moleculas3D;
@@ -165,7 +161,7 @@ public class ListMolBibliotecaState extends State {
         }
 
 
-        System.out.println(scrollPane.isDragging());
+       // System.out.println(scrollPane.isDragging());
 
 
 

@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import br.com.syssolutions.moleculas3d.model.Biblioteca;
-import br.com.syssolutions.moleculas3d.model.FontGenerator;
+import br.com.syssolutions.moleculas3d.Utils.FontGenerator;
 import br.com.syssolutions.moleculas3d.model.Molecula;
 import br.com.syssolutions.moleculas3d.model.Moleculas3D;
 import br.com.syssolutions.moleculas3d.control.states.GameStateManager;

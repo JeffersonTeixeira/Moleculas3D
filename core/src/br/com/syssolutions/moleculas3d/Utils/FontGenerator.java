@@ -1,4 +1,4 @@
-package br.com.syssolutions.moleculas3d.model;
+package br.com.syssolutions.moleculas3d.Utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

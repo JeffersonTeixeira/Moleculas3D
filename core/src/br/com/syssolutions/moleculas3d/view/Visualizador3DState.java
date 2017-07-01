@@ -3,6 +3,7 @@ package br.com.syssolutions.moleculas3d.view;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,6 +14,9 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -21,14 +25,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.ArrayList;
-
+import br.com.syssolutions.moleculas3d.Utils.VisualizadorCameraInputController;
 import br.com.syssolutions.moleculas3d.control.states.GameStateManager;
 import br.com.syssolutions.moleculas3d.control.states.State;
-import br.com.syssolutions.moleculas3d.model.Atomo;
 import br.com.syssolutions.moleculas3d.model.DrawSpaceFillingModel;
 import br.com.syssolutions.moleculas3d.model.DrawStickAndBallModel;
-import br.com.syssolutions.moleculas3d.model.Ligacao;
 import br.com.syssolutions.moleculas3d.model.ModelResources;
 import br.com.syssolutions.moleculas3d.model.Molecula;
 import br.com.syssolutions.moleculas3d.model.Visualizacao;
@@ -49,7 +50,8 @@ public class Visualizador3DState extends State {
 
     private Visualizacao visualizacao; //(LINE,    SPACE_FILLING,    STICK,    STICK_AND_BALL)
 
-    public CameraInputController camController;
+   public VisualizadorCameraInputController camController;
+
     public ModelBatch modelBatch;
 
     public Array<ModelInstance> instances = new Array<ModelInstance>();
@@ -70,7 +72,6 @@ public class Visualizador3DState extends State {
     private Button voltarbtn;
     private Button ajudabtn;
     private Button infobtn;
-
 
     public static void setMolecula(Molecula molecula) {
         Visualizador3DState.molecula = molecula;
@@ -96,7 +97,8 @@ public class Visualizador3DState extends State {
         cam.far = 300f;
         cam.update();
 
-        camController = new CameraInputController(cam);
+
+        camController = new VisualizadorCameraInputController(cam);
 
         buildStage();
 
@@ -105,6 +107,7 @@ public class Visualizador3DState extends State {
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(camController);
         Gdx.input.setInputProcessor(multiplexer);
+
 
     }
 
@@ -158,10 +161,10 @@ public class Visualizador3DState extends State {
         stage.addActor(stickAndBallBtn);
         stage.addActor(stickBtn);
 
-        addListenerBotoesVisualizacao();
+        addListenerBotoes();
     }
 
-    private void addListenerBotoesVisualizacao() {
+    private void addListenerBotoes() {
         spaceFillingBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -187,6 +190,7 @@ public class Visualizador3DState extends State {
                 loading = false;
             }
         });
+
 
     }
 
@@ -217,7 +221,7 @@ public class Visualizador3DState extends State {
 
     @Override
     protected void handleInput() {
-        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
             gsm.set(new ListMolBibliotecaState(gsm));
             dispose();
         }
@@ -237,21 +241,21 @@ public class Visualizador3DState extends State {
 
                 if (loading)
                     loadSpaceFillingModel();
-                camController.update();
+                cam.update();
                 break;
 
             case STICK_AND_BALL:
 
                 if (loading)
                     loadStickBallModel();
-                camController.update();
+                cam.update();
                 break;
 
             case LINE:
 
                 if (loading)
 
-                    camController.update();
+                    cam.update();
                 break;
 
         }
@@ -280,63 +284,51 @@ public class Visualizador3DState extends State {
 
 
     }
+    /*
+    protected static class CameraGestureListener extends GestureDetector.GestureAdapter {
+        public CameraInputController controller;
+        private float previousZoom;
 
+        @Override
+        public boolean touchDown (float x, float y, int pointer, int button) {
+            previousZoom = 0;
+            return false;
+        }
 
-    public Molecula criaMoleculaAgua() {
-        Molecula agua = new Molecula();
-        agua.atomos = new ArrayList<Atomo>();
-        agua.ligacoes = new ArrayList<Ligacao>();
+        @Override
+        public boolean tap (float x, float y, int count, int button) {
+            return false;
+        }
 
-        //Declaração e atribuição de valores: Átomos Início:
-        Atomo a1 = new Atomo();
-        Atomo a2 = new Atomo();
-        Atomo a3 = new Atomo();
+        @Override
+        public boolean longPress (float x, float y) {
+            Gdx.input.vibrate(100);
+            return true;
+        }
 
+        @Override
+        public boolean fling (float velocityX, float velocityY, int button) {
+            return false;
+        }
 
-        a1.id = "a1";
-        a1.simbolo = "H";
-        a1.x = 0.631087f;
-        a1.y = -0.026505f;
-        a1.z = 0.474853f;
-//        a1.setCor();
+        @Override
+        public boolean pan (float x, float y, float deltaX, float deltaY) {
+            return false;
+        }
 
-        a2.id = "a2";
-        a2.simbolo = "O";
-        a2.x = 0.147925f;
-        a2.y = -0.029981f;
-        a2.z = -0.34219f;
-//        a2.setCor();
+        @Override
+        public boolean zoom (float initialDistance, float distance) {
+            float newZoom = distance - initialDistance;
+            float amount = newZoom - previousZoom;
+            previousZoom = newZoom;
+            float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+           // return controller.pinchZoom(amount / ((w > h) ? h : w));
+            return false;
+        }
 
-        a3.id = "a3";
-        a3.simbolo = "H";
-        a3.x = -0.779012f;
-        a3.y = -0.003476f;
-        a3.z = -0.132663f;
-//        a3.setCor();
-
-        agua.atomos.add(a1);
-        agua.atomos.add(a2);
-        agua.atomos.add(a3);
-        //Declaração e atribuição de valores: Átomos FIM:
-
-        //Declaração e atribuição de valores: Ligações Início:
-        Ligacao l1 = new Ligacao();
-        Ligacao l2 = new Ligacao();
-
-        l1.ordemLigacao = 1;
-        l1.primeiroAtomo = a1;
-        l1.segundoAtomo = a2;
-
-        l2.ordemLigacao = 1;
-        l2.primeiroAtomo = a2;
-        l2.segundoAtomo = a3;
-
-        agua.ligacoes.add(l1);
-        agua.ligacoes.add(l2);
-        //Declaração e atribuição de valores: Ligações FIM:
-
-        return agua;
-
-    }
-
+        @Override
+        public boolean pinch (Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+            return false;
+        }
+    };*/
 }
