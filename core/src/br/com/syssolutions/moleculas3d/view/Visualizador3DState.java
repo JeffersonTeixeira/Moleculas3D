@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
+
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -25,7 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 
-import br.com.syssolutions.moleculas3d.Utils.VisualizadorCameraInputController;
 import br.com.syssolutions.moleculas3d.control.states.GameStateManager;
 import br.com.syssolutions.moleculas3d.control.states.State;
 import br.com.syssolutions.moleculas3d.model.DrawSpaceFillingModel;
@@ -42,7 +43,7 @@ import static br.com.syssolutions.moleculas3d.model.Visualizacao.STICK_AND_BALL;
  * Created by jefferson on 17/10/16.
  */
 
-public class Visualizador3DState extends State {
+public class Visualizador3DState extends State implements InputProcessor, GestureListener {
 
     private final float BUTTONSIZE = Gdx.graphics.getWidth() / 8; //média de 12% da largura da tela
 
@@ -50,7 +51,7 @@ public class Visualizador3DState extends State {
 
     private Visualizacao visualizacao; //(LINE,    SPACE_FILLING,    STICK,    STICK_AND_BALL)
 
-   public VisualizadorCameraInputController camController;
+    // public VisualizadorCameraInputController camController;
 
     public ModelBatch modelBatch;
 
@@ -72,6 +73,48 @@ public class Visualizador3DState extends State {
     private Button voltarbtn;
     private Button ajudabtn;
     private Button infobtn;
+
+
+    //Variáveis para controlar os Gestos com touch
+    float zoom; //Mantem o Valor do zoom atual;
+    float zoomAmount;//armazena o montante do zoom (mais ou menos)
+
+
+    Vector3 tmpV1 = new Vector3();
+    Vector3 target = new Vector3(0, 0, 0);
+    float rotateAngle = 360f;
+
+    /**
+     * The key which must be pressed to activate rotate, translate and forward or 0 to always activate.
+     */
+    public int activateKey = 0;
+    /**
+     * Indicates if the activateKey is currently being pressed.
+     */
+    protected boolean activatePressed;
+
+    protected boolean forwardPressed;
+    public int backwardKey = Input.Keys.S;
+
+    public int forwardKey = Input.Keys.W;
+
+    protected boolean backwardPressed;
+
+    public int rotateRightKey = Input.Keys.A;
+    protected boolean rotateRightPressed;
+
+    public int rotateLeftKey = Input.Keys.D;
+    protected boolean rotateLeftPressed;
+
+
+    /**
+     * The current (first) button being pressed.
+     */
+    protected int button = -1;
+
+    float startX;
+    float startY;
+
 
     public static void setMolecula(Molecula molecula) {
         Visualizador3DState.molecula = molecula;
@@ -97,15 +140,19 @@ public class Visualizador3DState extends State {
         cam.far = 300f;
         cam.update();
 
+//        camera_position = cam.position;
 
-        camController = new VisualizadorCameraInputController(cam);
+        // camController = new VisualizadorCameraInputController(cam);
 
         buildStage();
 
         //Adicionar
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
-        multiplexer.addProcessor(camController);
+        GestureDetector gd = new GestureDetector(this);
+        // multiplexer.addProcessor(camController);
+        multiplexer.addProcessor(gd);
+        multiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(multiplexer);
 
 
@@ -283,6 +330,142 @@ public class Visualizador3DState extends State {
         skinVisualizador3D.dispose();
 
 
+    }
+
+    @Override
+    public boolean touchDown(float x, float y, int pointer, int button) {
+
+
+        // System.out.println("Button: "+button);
+
+
+        return false;
+    }
+
+    @Override
+    public boolean tap(float x, float y, int count, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean longPress(float x, float y) {
+        return false;
+    }
+
+    @Override
+    public boolean fling(float velocityX, float velocityY, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean pan(float x, float y, float deltaX, float deltaY) {
+        return false;
+    }
+
+    @Override
+    public boolean panStop(float x, float y, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean zoom(float initialDistance, float distance) {
+
+        //zoom Amount
+        if (zoom < distance)
+            zoomAmount = 0.5f;
+        else
+            zoomAmount = -0.5f;
+
+        cam.position.add(cam.direction.x * zoomAmount, cam.direction.y * zoomAmount, cam.direction.z * zoomAmount);
+        cam.update();
+
+        zoom = distance;
+
+        return true;
+    }
+
+    @Override
+    public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+        return false;
+    }
+
+    @Override
+    public void pinchStop() {
+
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+
+//        cam.update();
+//
+//      tmpV1.set(0,0,0);
+//        System.out.println("Touchup!!!");
+//        System.out.println("tmpV1 X: " + tmpV1.x + " tmpV1 Y: " + tmpV1.y + " tmpV1 Z: " + tmpV1.z);
+
+        return true;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+
+        final float deltaX = (screenX - startX) / Gdx.graphics.getWidth();
+        final float deltaY = (startY - screenY) / Gdx.graphics.getHeight();
+        startX = screenX;
+        startY = screenY;
+
+
+
+
+
+
+
+
+        tmpV1.set(cam.direction).crs(cam.up).y = 0f;
+        cam.rotateAround(target, tmpV1.nor(), deltaY * rotateAngle);
+        cam.rotateAround(target, Vector3.Y, deltaX * -rotateAngle);
+
+        //target.set();
+
+        System.out.println("tmpV1 X: " + tmpV1.x + " tmpV1 Y: " + tmpV1.y + " tmpV1 Z: " + tmpV1.z);
+        System.out.println("Target X: " + target.x + " target Y: " + target.y + " target Z: " + target.z);
+
+        cam.update();
+
+
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
     /*
     protected static class CameraGestureListener extends GestureDetector.GestureAdapter {

@@ -79,7 +79,7 @@ public class MenuInicialState extends State {
 
     public void render(SpriteBatch sb) {
 
-        sb.setProjectionMatrix(camOrtho.combined); //especifica área do game world a ser mostrada
+        sb.setProjectionMatrix(camOrtho.combined); //especifica área do game world zoomAmount ser mostrada
         sb.begin();
         sb.draw(background, 0, 0, camOrtho.viewportWidth, camOrtho.viewportHeight);
         sb.end();
