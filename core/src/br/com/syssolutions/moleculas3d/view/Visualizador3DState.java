@@ -81,36 +81,8 @@ public class Visualizador3DState extends State implements InputProcessor, Gestur
 
 
     Vector3 tmpV1 = new Vector3();
-    Vector3 target = new Vector3(0, 0, 0);
+    Vector3 target = Vector3.Zero;
     float rotateAngle = 360f;
-
-    /**
-     * The key which must be pressed to activate rotate, translate and forward or 0 to always activate.
-     */
-    public int activateKey = 0;
-    /**
-     * Indicates if the activateKey is currently being pressed.
-     */
-    protected boolean activatePressed;
-
-    protected boolean forwardPressed;
-    public int backwardKey = Input.Keys.S;
-
-    public int forwardKey = Input.Keys.W;
-
-    protected boolean backwardPressed;
-
-    public int rotateRightKey = Input.Keys.A;
-    protected boolean rotateRightPressed;
-
-    public int rotateLeftKey = Input.Keys.D;
-    protected boolean rotateLeftPressed;
-
-
-    /**
-     * The current (first) button being pressed.
-     */
-    protected int button = -1;
 
     float startX;
     float startY;
@@ -435,25 +407,11 @@ public class Visualizador3DState extends State implements InputProcessor, Gestur
         startX = screenX;
         startY = screenY;
 
-
-
-
-
-
-
-
         tmpV1.set(cam.direction).crs(cam.up).y = 0f;
         cam.rotateAround(target, tmpV1.nor(), deltaY * rotateAngle);
         cam.rotateAround(target, Vector3.Y, deltaX * -rotateAngle);
 
-        //target.set();
-
-        System.out.println("tmpV1 X: " + tmpV1.x + " tmpV1 Y: " + tmpV1.y + " tmpV1 Z: " + tmpV1.z);
-        System.out.println("Target X: " + target.x + " target Y: " + target.y + " target Z: " + target.z);
-
         cam.update();
-
-
 
         return true;
     }
