@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Array;
+
 import java.util.Map;
 
 import br.com.syssolutions.moleculas3d.Utils.FontGenerator;
@@ -138,7 +139,7 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                buscaFocus=true;
+                buscaFocus = true;
                 return false;
             }
 
@@ -184,7 +185,7 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
                 stage.unfocus(buscaTxField);
-                buscaFocus=false;
+                buscaFocus = false;
                 Gdx.input.setOnscreenKeyboardVisible(false);
 
                 return false;
@@ -199,7 +200,6 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
 
     @Override
     protected void handleInput() {
-
 
 
         //Tecla back android
