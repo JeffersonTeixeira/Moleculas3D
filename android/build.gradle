@@ -19,7 +19,7 @@ android {
     }
     defaultConfig {
         applicationId "br.com.syssolutions.moleculas3d"
-        minSdkVersion 8
+        minSdkVersion 9
         targetSdkVersion 25
     }
 }

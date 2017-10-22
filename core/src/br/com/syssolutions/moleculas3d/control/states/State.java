@@ -13,7 +13,7 @@ public abstract class State {
     //protected OrthographicCamera cam; //Câmera
     protected PerspectiveCamera cam;
     protected Vector3 mouse; //para detectar os eixos X,Y,Z mouse ou touch;
-    protected GameStateManager gsm;
+    public GameStateManager gsm;
 
 
     public State(GameStateManager gsm) {
