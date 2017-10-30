@@ -1,19 +1,26 @@
 package br.com.syssolutions.moleculas3d.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import br.com.syssolutions.moleculas3d.Utils.FontGenerator;
@@ -30,7 +37,7 @@ public class FileExplorerState extends State {
     private OrthographicCamera camOrtho;
 
 
-    private String extRoot, locRoot;
+    private String extRoot, locRoot, atualPatch;
     private FileHandle dirHandle;
 
     private FileHandle[] listFiles;
@@ -59,7 +66,7 @@ public class FileExplorerState extends State {
         //Initial Patch:
         if (Gdx.files.isExternalStorageAvailable()) {
             extRoot = Gdx.files.getExternalStoragePath();
-            System.out.println("external Exists: " + extRoot);
+            //   System.out.println("external Exists: " + extRoot);
         }
         if (Gdx.files.isLocalStorageAvailable()) {
             locRoot = Gdx.files.getLocalStoragePath();
@@ -67,17 +74,15 @@ public class FileExplorerState extends State {
 //            FileHandle file = Gdx.files.local("myfile.txt");
 //            file.writeString("My god, it's full of stars", false);
 
-            System.out.println("local Exists: " + locRoot);
+            //   System.out.println("local Exists: " + locRoot);
         }
 
-        skin= new Skin();
-
+        skin = new Skin();
 
 
         folderT = new Texture(Gdx.files.internal("ui-imagens/folder.png"));
         fileT = new Texture(Gdx.files.internal("ui-imagens/file.png"));
         molT = new Texture(Gdx.files.internal("ui-imagens/mol.png"));
-
 
 
 //Internal é do APP
@@ -95,18 +100,16 @@ public class FileExplorerState extends State {
 //        }
 
 
-
         background = new Texture("ui-imagens/background.jpg");
 
         labelStyle = new Label.LabelStyle();
 
-        FontGenerator fontTitulo = new FontGenerator(40, "VeraBd.ttf",null);
+        FontGenerator fontTitulo = new FontGenerator(40, "VeraBd.ttf", null);
 
         labelStyle.font = fontTitulo.getFont();
 
 
-
-       showFiles(dirHandle);
+        showFiles(dirHandle);
 
     }
 
@@ -117,73 +120,103 @@ public class FileExplorerState extends State {
     }
 
 
-    public void showFiles(FileHandle fileHandle) {
+    public void showFiles(final FileHandle fileHandle) {
+
+        dirHandle = fileHandle;
 
         container = new Table();
         container.setWidth(Gdx.graphics.getWidth());
         container.setHeight(Gdx.graphics.getHeight());
-
+        // container.setFillParent(false);
 
         Table innerContainer = new Table();
-        //innerContainer.setWidth(container.getWidth() * (0.85f));
-        innerContainer.setWidth(Gdx.graphics.getWidth());
-        innerContainer.setHeight(Gdx.graphics.getHeight());
+        innerContainer.align(Align.topLeft);
 
 
         if (fileHandle.isDirectory()) {
+
+            Table backTable = new Table(skin);
+            backTable.add(new Image(folderT)).expandY().fillY().space(10f).left();
+            backTable.add(new Label("..", labelStyle)).expandY().fillY().width(container.getWidth() - folderT.getWidth()).left();
+            backTable.align(Align.left);
+
+
+            backTable.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+
+                    showFiles(Gdx.files.external(fileHandle.parent().toString()));
+
+
+                }
+            });
+
+
+            innerContainer.add(backTable);
+            innerContainer.row();
+
+
             for (FileHandle file : fileHandle.list()) {
-
                 Table table = new Table(skin);
-                table.setWidth(Gdx.graphics.getWidth());
-                table.setHeight(Gdx.graphics.getHeight());
-
+                //table.debugTable();
+                final FileHandle fl = file;
 
                 if (file.isDirectory()) {
 
-                    table.add(new Image(folderT)).expandY().fillY();
-                    table.add(new Label("", labelStyle)).width(10f).expandY().fillY();// a spacer
-                    table.add(new Label(file.name(), labelStyle)).expandY().fillY();
 
-                    innerContainer.add(table).expand().fill();
+                    table.add(new Image(folderT)).expandY().fillY().space(10f).left();
+                    table.add(new Label(file.name(), labelStyle)).expandY().fillY().width(container.getWidth() - folderT.getWidth()).left();
+
+                    table.align(Align.left);
+
+
+                    table.addListener(new ClickListener() {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            System.out.println(fl.parent());
+                            atualPatch = fl.parent().toString();
+                            showFiles(Gdx.files.external(fl.path()));
+                        }
+                    });
+
+                    innerContainer.add(table);//.expand().fill();
+
                     innerContainer.row();
 
                 } else {
                     if (file.extension() != "mol") {
-                        table.add(new Image(fileT)).expandY().fillY();
+                        //innerContainer.add(new Image(fileT)).expandY().fillY();
+
+                        table.add(new Image(fileT)).expandY().fillY().space(10f).left();
+                        table.add(new Label(file.name(), labelStyle)).expandY().fillY().width(container.getWidth() - fileT.getWidth()).left();
 
                     } else {
-                        table.add(new Image(molT)).expandY().fillY();
+                        //innerContainer.add(new Image(molT)).expandY().fillY();
+                        table.add(new Image(molT)).expandY().fillY().space(10f).left();
+                        table.add(new Label(file.name(), labelStyle)).expandY().fillY().width(container.getWidth() - molT.getWidth()).left();
                     }
 
-                    table.add(new Label("", labelStyle)).width(10f).expandY().fillY();// a spacer
-                    table.add(new Label(file.name(), labelStyle)).expandY().fillY();
+                    table.align(Align.left);
+                    innerContainer.add(table);
 
 
-                    innerContainer.add(table).expand().fill().align(8);
+//                    innerContainer.add(new Label("", labelStyle)).width(10f).expandY().fillY();// a spacer
+//                    innerContainer.add(new Label(file.name(), labelStyle)).expandY().fillY().left();
+
                     innerContainer.row();
 
                 }
 
-
-                System.out.println(file);
             }
         } else {
             System.out.println("Não é diretório");
         }
 
 
-
         scrollpane = new ScrollPane(innerContainer);
-        scrollpane.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         scrollpane.setScrollingDisabled(true, false);
-
         container.add(scrollpane).fill().expand();
-
-
-
         stage = new Stage();
-
-
         stage.addActor(container);
 
         Gdx.input.setInputProcessor(stage);
@@ -194,12 +227,18 @@ public class FileExplorerState extends State {
 
     @Override
     protected void handleInput() {
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+
+            showFiles(Gdx.files.external(dirHandle.parent().toString()));
+
+        }
+
 
     }
 
     @Override
     public void update(float dt) {
-
+        handleInput();
     }
 
     @Override

@@ -112,7 +112,7 @@ public class MenuInicialState extends State {
         btBiblioteca.setPosition(((Gdx.graphics.getWidth() / 2) - (btnLargura / 2)), Gdx.graphics.getHeight() / 2);
         stage.addActor(btBiblioteca);
 
-        btCartaoSD = new TextButton("Cartão SD", skin);
+        btCartaoSD = new TextButton("Buscar", skin);
         btCartaoSD.setPosition(((Gdx.graphics.getWidth() / 2) - (btnLargura / 2)), Gdx.graphics.getHeight() / 3);
         stage.addActor(btCartaoSD);
 
@@ -121,20 +121,7 @@ public class MenuInicialState extends State {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
 
-
-                try {
-
-
-                    Molecula mol = ReadMoleculaXML.read(Biblioteca.getBiblioteca().get(242));
-
-                    Visualizador3DState.setMolecula(mol);
-
-
-                    System.out.println("carregou molécula pelo menu Inicial");
-                } catch (Exception e) {
-                    System.out.println("Falha ao carregar molécula pelo menu Inicial" + e);
-                }
-                gsm.set(new Visualizador3DState(gsm));
+                gsm.set(new FileExplorerState(gsm));
                 dispose();
 
             }
