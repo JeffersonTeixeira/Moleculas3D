@@ -5,6 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.io.File;
+
+import br.com.syssolutions.moleculas3d.control.IEnvironmentAndroid;
 import br.com.syssolutions.moleculas3d.control.Moleculas3DCallBack;
 import br.com.syssolutions.moleculas3d.control.states.GameStateManager;
 import br.com.syssolutions.moleculas3d.view.MenuInicialState;
@@ -19,14 +22,18 @@ public class Moleculas3D extends ApplicationAdapter {
 
     private GameStateManager gsm;
     private SpriteBatch batch;
+    public static IEnvironmentAndroid iEnvironmentAndroid;
 
 
-    public Moleculas3DCallBack moleculas3DCallBack;
+    // public Moleculas3DCallBack moleculas3DCallBack;
 
-    public Moleculas3D(Moleculas3DCallBack moleculas3DCallBack) {
+    public Moleculas3D(IEnvironmentAndroid iEnvironmentAndroid) {
+
         super();
-        this.moleculas3DCallBack = moleculas3DCallBack;
+        this.iEnvironmentAndroid = iEnvironmentAndroid;
 
+        // this.moleculas3DCallBack = moleculas3DCallBack;
+        // System.out.println("oiaa: "+iEnvironmentAndroid.getExternalStorageDirectory().getAbsoluteFile());
 
     }
 
