@@ -1,8 +1,10 @@
 package br.com.syssolutions.moleculas3d.model;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +30,39 @@ public class ReadMoleculaXML {
 
         BufferedReader reader = new BufferedReader(isr);
 
+        return read(filename, reader);
 
+
+    }
+
+
+    public static Molecula read(FileHandle file, boolean absolute) throws IOException {
+
+
+        String filename = file.name();
+
+        InputStream is;
+
+        if (absolute) {
+            is = Gdx.files.absolute(file.path()).read();
+
+        } else {
+            is = Gdx.files.external(file.path()).read();
+        }
+
+
+        InputStreamReader isr = new InputStreamReader(is);
+
+        BufferedReader reader = new BufferedReader(isr);
+
+
+        return read(filename, reader);
+
+
+    }
+
+
+    private static Molecula read(String filename, BufferedReader reader) throws IOException {
         System.out.println("Reading MOL");
 
 
@@ -101,8 +135,12 @@ public class ReadMoleculaXML {
         if (m.find()) {
             int num_of_atoms = Integer.parseInt(reader.readLine().replaceAll("\\s+", ""));
             reader.readLine();
+
+
+
             for (int i = 0; i < num_of_atoms; i++) {
-                line = reader.readLine();
+                line = reader.readLine().trim();
+
                 tokens = line.split("\\s+");
                 Atomo atom = new Atomo();
                 atom.simbolo = tokens[0];
@@ -110,6 +148,7 @@ public class ReadMoleculaXML {
                 atom.y = Float.parseFloat(tokens[2]);
                 atom.z = Float.parseFloat(tokens[3]);
                 atoms.add(atom);
+
             }
         }
         Pattern mol = Pattern.compile(".mol$");

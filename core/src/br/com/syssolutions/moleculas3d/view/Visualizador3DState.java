@@ -68,6 +68,7 @@ public class Visualizador3DState extends State {
     private Button voltarbtn;
     private Button ajudabtn;
     private Button infobtn;
+    private DirectionalLight directionalLight;
 
 
     //Variáveis para controlar os Gestos com touch
@@ -217,9 +218,23 @@ public class Visualizador3DState extends State {
 
 
     private void carregaConfAmbiente() {
+
+
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        //environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, (cam.up.x-1f), (cam.up.x-0.8f), (cam.up.x-0.2f)));
+
+
+        //cam.up.x;
+
+        //cam.direction
+        //environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+
+
+
+
+
 
     }
 
@@ -256,6 +271,9 @@ public class Visualizador3DState extends State {
     @Override
     public void render(SpriteBatch sb) {
 
+
+
+        carregaConfAmbiente();
         switch (visualizacao) {
 
             case SPACE_FILLING:

@@ -40,6 +40,21 @@ public class GameStateManager {
         estados.push(state);
     }
 
+
+    public void setWaitState(State waitState)throws CloneNotSupportedException {
+
+        estados.pop();
+        estados.push(waitState);
+        State newState=(State)waitState.clone();
+        estados.push(newState);
+
+    }
+
+    public void getBackState(State currentState){
+        estados.remove(1);
+    }
+
+
     public void update(float deltatime) {
         estados.peek().update(deltatime);
     }
