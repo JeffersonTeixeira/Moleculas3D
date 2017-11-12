@@ -40,6 +40,9 @@ import static br.com.syssolutions.moleculas3d.model.Visualizacao.STICK_AND_BALL;
 
 public class Visualizador3DState extends State {
 
+
+    private boolean voltaArmazenamento;
+
     private final float BUTTONSIZE = Gdx.graphics.getWidth() / 8; //média de 12% da largura da tela
 
     static Molecula molecula;
@@ -76,20 +79,13 @@ public class Visualizador3DState extends State {
     float zoomAmount;//armazena o montante do zoom (mais ou menos)
 
 
-    Vector3 tmpV1 = new Vector3();
-    Vector3 target = Vector3.Zero;
-    float rotateAngle = 360f;
-
-    float startX;
-    float startY;
-
-
     public static void setMolecula(Molecula molecula) {
         Visualizador3DState.molecula = molecula;
     }
 
-    public Visualizador3DState(GameStateManager gsm) {
+    public Visualizador3DState(GameStateManager gsm, boolean voltaArmazenamento) {
         super(gsm);
+        this.voltaArmazenamento = voltaArmazenamento;
         //molecula = criaMoleculaAgua();
 
         modelBatch = new ModelBatch();
@@ -186,7 +182,6 @@ public class Visualizador3DState extends State {
                 visualizacao = SPACE_FILLING;
                 loading = true;
 
-
             }
         });
 
@@ -209,7 +204,7 @@ public class Visualizador3DState extends State {
         voltarbtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gsm.set(new ListMolBibliotecaState(gsm));
+                actionBackkey();
             }
         });
 
@@ -223,17 +218,13 @@ public class Visualizador3DState extends State {
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         //environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, (cam.up.x-1f), (cam.up.x-0.8f), (cam.up.x-0.2f)));
+        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, (cam.up.x - 1f), (cam.up.x - 0.8f), (cam.up.x - 0.2f)));
 
 
         //cam.up.x;
 
         //cam.direction
         //environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-
-
-
-
 
 
     }
@@ -254,14 +245,26 @@ public class Visualizador3DState extends State {
         loading = false;
     }
 
+    private void actionBackkey() {
+        if (voltaArmazenamento) {
+            gsm.set(new FileExplorerState(gsm));
+
+        } else {
+            gsm.set(new ListMolBibliotecaState(gsm));
+        }
+
+        dispose();
+    }
+
 
     @Override
     protected void handleInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
-            gsm.set(new ListMolBibliotecaState(gsm));
-            dispose();
+            actionBackkey();
+
         }
     }
+
 
     @Override
     public void update(float dt) {
@@ -270,7 +273,6 @@ public class Visualizador3DState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
-
 
 
         carregaConfAmbiente();

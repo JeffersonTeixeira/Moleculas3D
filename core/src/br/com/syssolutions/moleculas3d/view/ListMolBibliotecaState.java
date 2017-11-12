@@ -293,7 +293,7 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
             Molecula mol = ReadMoleculaXML.read(Biblioteca.getBiblioteca().get(programList.getSelected()));
 
             Visualizador3DState.setMolecula(mol);
-            gsm.set(new Visualizador3DState(gsm));
+            gsm.set(new Visualizador3DState(gsm, false));
         } catch (Exception e) {
             System.out.println("Falha ao carregar molécula" + e);
         }

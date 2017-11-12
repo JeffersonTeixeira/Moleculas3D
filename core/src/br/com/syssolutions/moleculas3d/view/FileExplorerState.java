@@ -1,6 +1,7 @@
 package br.com.syssolutions.moleculas3d.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import br.com.syssolutions.moleculas3d.Utils.FontGenerator;
 import br.com.syssolutions.moleculas3d.control.states.GameStateManager;
@@ -33,55 +35,60 @@ import br.com.syssolutions.moleculas3d.model.ReadMoleculaXML;
 public class FileExplorerState extends State {
 
 
-
-    private static String lastPath;
+    private static String lastPath = "", root = "";
 
     private OrthographicCamera camOrtho;
-    private FileHandle[] listFiles;
 
-
-    private Texture background;
     private Skin skin;
+    private Texture background;
     private TextureAtlas textureAtlas;
 
     private Texture folderT, fileT, molT, folderUP;
 
-    private Table container;
+    private static Table container;
 
     private Stage stage;
     private ScrollPane scrollpane;
     private LabelStyle labelStyle;
 
 
-    public FileExplorerState(GameStateManager gsm, String path) {
+    public FileExplorerState(GameStateManager gsm) {
         super(gsm);
 
         init();
 
-        try{
-            FileHandle fileHandle = Gdx.files.external(path);
 
-            showFilesEx(fileHandle);
+        if ((lastPath != null) && !lastPath.equals("") && (root != null)) {
 
-        }catch (Exception e){
+            try {
+                if (!root.equals("")) {
+                    throw new FileNotFoundException("LastPath não está na memória interna");
+                }
+                FileHandle fileHandle = Gdx.files.external(new FileHandle(lastPath).toString());
 
-            try{
+                showFilesEx(fileHandle);
 
-                FileHandle fileHandle = Gdx.files.external(path);
+            } catch (Exception e) {
 
-                //showFilesAb(fileHandle);
+                try {
+                    FileHandle fileHandle = Gdx.files.absolute(new FileHandle(lastPath).toString());
+                    showFilesAb(fileHandle, root);
+                } catch (Exception ex) {
+                    showStorageAvailable();
 
-
-            }catch (Exception ex){
+                }
 
             }
 
+        } else {
+            showStorageAvailable();
         }
+
 
     }
 
 
-    private void init(){
+    private void init() {
         camOrtho = new OrthographicCamera();
         camOrtho.setToOrtho(false, Moleculas3D.WIDTH, Moleculas3D.HEIGHT);
         stage = new Stage();
@@ -104,16 +111,6 @@ public class FileExplorerState extends State {
 
     }
 
-    public FileExplorerState(GameStateManager gsm) {
-        super(gsm);
-
-        init();
-
-
-        showStorageAvailable();
-
-    }
-
 
     private void showStorageAvailable() {
 
@@ -126,9 +123,6 @@ public class FileExplorerState extends State {
 
 
         if (Gdx.files.external("").isDirectory()) {
-
-
-            //System.out.println("Patch do diretório External: " + Gdx.files.external("").path());
 
 
             Table table = new Table(skin);
@@ -174,10 +168,6 @@ public class FileExplorerState extends State {
                 Table table = new Table(skin);
                 final FileHandle f = Gdx.files.absolute(file.getAbsolutePath());
 
-
-                // System.out.println("Path do Cartão: " + file.getAbsolutePath());
-
-
                 if (f.isDirectory()) {
 
 
@@ -190,8 +180,7 @@ public class FileExplorerState extends State {
                     table.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            //System.out.println("Path() Atual: " + f.path());
-                            //atualPatch = f.parent().toString();
+
                             showFilesAb(Gdx.files.absolute(f.path()), f.path().toString());
                         }
                     });
@@ -222,6 +211,7 @@ public class FileExplorerState extends State {
 
     public void showFilesEx(final FileHandle fileHandle) {
 
+        root = "";
 
         container = new Table();
         container.setWidth(Gdx.graphics.getWidth());
@@ -237,6 +227,7 @@ public class FileExplorerState extends State {
             Table backTable = new Table(skin);
             backTable.add(new Image(folderUP)).expandY().fillY().space(10f).left();
             backTable.add(new Label("..", labelStyle)).expandY().fillY().width(container.getWidth() - folderT.getWidth()).left();
+
             backTable.align(Align.left);
 
 
@@ -244,7 +235,7 @@ public class FileExplorerState extends State {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
 
-                    if (fileHandle.path().toString() == "") {
+                    if (fileHandle.path().equals("")) {
                         showStorageAvailable();
                     } else
                         showFilesEx(Gdx.files.external(fileHandle.parent().toString()));
@@ -307,9 +298,12 @@ public class FileExplorerState extends State {
                                 try {
                                     Molecula mol = ReadMoleculaXML.read(fl, false);
 
-                                    lastPath=fl.path();
+
+                                    lastPath = fl.parent().toString();
                                     Visualizador3DState.setMolecula(mol);
-                                    gsm.set(new Visualizador3DState(gsm));
+                                    gsm.set(new Visualizador3DState(gsm, true));
+
+
                                     dispose();
                                 } catch (Exception e) {
                                     System.out.println("Falha ao carregar molécula" + e);
@@ -353,7 +347,7 @@ public class FileExplorerState extends State {
 
     public void showFilesAb(final FileHandle fileHandle, String raiz) {
 
-        final String root = raiz;
+        root = raiz;
 
 
         container = new Table();
@@ -367,11 +361,12 @@ public class FileExplorerState extends State {
 
         if (fileHandle.isDirectory()) {
 
-            final Table backTable = new Table(skin);
+            Table backTable = new Table(skin);
             backTable.add(new Image(folderUP)).expandY().fillY().space(10f).left();
 
 
             backTable.add(new Label("..", labelStyle)).expandY().fillY().width(container.getWidth() - folderT.getWidth()).left();
+
             backTable.align(Align.left);
 
 
@@ -379,7 +374,7 @@ public class FileExplorerState extends State {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
 
-                    if ((fileHandle.path().toString().equals(root))/*||fileHandle.parent().path().toString()==root*/) {
+                    if ((fileHandle.path().equals(root))/*||fileHandle.parent().path().toString()==root*/) {
 
                         showStorageAvailable();
                     } else {
@@ -445,10 +440,10 @@ public class FileExplorerState extends State {
 
                                 try {
                                     Molecula mol = ReadMoleculaXML.read(fl, true);
-                                    lastPath=fl.path();
+                                    lastPath = fl.parent().toString();
 
                                     Visualizador3DState.setMolecula(mol);
-                                    gsm.set(new Visualizador3DState(gsm));
+                                    gsm.set(new Visualizador3DState(gsm, true));
                                     dispose();
                                 } catch (Exception e) {
                                     System.out.println("Falha ao carregar molécula" + e);
@@ -488,14 +483,21 @@ public class FileExplorerState extends State {
 
     }
 
+    private void actionBackkey() {
+
+
+
+        //dispose();
+    }
+
 
     @Override
     protected void handleInput() {
-//        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
-//
-//            showFilesEx(Gdx.files.external(dirHandle.parent().toString()));
-//
-//        }
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+
+            actionBackkey();
+
+        }
 
 
     }
@@ -513,15 +515,18 @@ public class FileExplorerState extends State {
         //sb.draw(background, 0, 0, camOrtho.viewportWidth, camOrtho.viewportHeight);
         sb.end();
 
-
         stage.act();
         stage.draw();
-
 
     }
 
     @Override
     public void dispose() {
+
+        stage.dispose();
+        skin.dispose();
+        textureAtlas.dispose();
+        background.dispose();
 
     }
 }
