@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,11 +47,13 @@ public class FileExplorerState extends State {
 
     private Texture folderT, fileT, molT, folderUP;
 
-    private static Table container;
+    private static Table container, backTable;
+
 
     private Stage stage;
     private ScrollPane scrollpane;
     private LabelStyle labelStyle;
+    private ScrollPane.ScrollPaneStyle scrollPaneStyle;
 
 
     public FileExplorerState(GameStateManager gsm) {
@@ -97,6 +101,13 @@ public class FileExplorerState extends State {
         skin = new Skin();
 
 
+        ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
+        style.vScrollKnob = new Image(new Texture("ui-imagens/listmolbiblioteca/scrollBarThumb.png")).getDrawable();
+
+
+        skin.add("default", style);
+
+
         folderT = new Texture(Gdx.files.internal("ui-imagens/folder.png"));
         fileT = new Texture(Gdx.files.internal("ui-imagens/file.png"));
         molT = new Texture(Gdx.files.internal("ui-imagens/mol.png"));
@@ -107,6 +118,9 @@ public class FileExplorerState extends State {
         labelStyle = new Label.LabelStyle();
         FontGenerator fontTitulo = new FontGenerator(40, "VeraBd.ttf", null);
         labelStyle.font = fontTitulo.getFont();
+
+        scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
+        scrollPaneStyle.hScrollKnob = new Image(new Texture("ui-imagens/listmolbiblioteca/scrollBarThumb.png")).getDrawable();
 
 
     }
@@ -197,7 +211,7 @@ public class FileExplorerState extends State {
             System.out.println(ex);
         }
 
-        scrollpane = new ScrollPane(innerContainer);
+        scrollpane = new ScrollPane(innerContainer, skin);
         scrollpane.setScrollingDisabled(true, false);
         container.add(scrollpane).fill().expand();
 
@@ -224,7 +238,7 @@ public class FileExplorerState extends State {
 
         if (fileHandle.isDirectory()) {
 
-            Table backTable = new Table(skin);
+            backTable = new Table(skin);
             backTable.add(new Image(folderUP)).expandY().fillY().space(10f).left();
             backTable.add(new Label("..", labelStyle)).expandY().fillY().width(container.getWidth() - folderT.getWidth()).left();
 
@@ -236,7 +250,9 @@ public class FileExplorerState extends State {
                 public void clicked(InputEvent event, float x, float y) {
 
                     if (fileHandle.path().equals("")) {
+                        backTable = null;
                         showStorageAvailable();
+
                     } else
                         showFilesEx(Gdx.files.external(fileHandle.parent().toString()));
 
@@ -330,10 +346,11 @@ public class FileExplorerState extends State {
             }
         } else {
             System.out.println("Não é diretório");
+            showStorageAvailable();
         }
 
 
-        scrollpane = new ScrollPane(innerContainer);
+        scrollpane = new ScrollPane(innerContainer, skin);
         scrollpane.setScrollingDisabled(true, false);
         container.add(scrollpane).fill().expand();
 
@@ -361,7 +378,7 @@ public class FileExplorerState extends State {
 
         if (fileHandle.isDirectory()) {
 
-            Table backTable = new Table(skin);
+            backTable = new Table(skin);
             backTable.add(new Image(folderUP)).expandY().fillY().space(10f).left();
 
 
@@ -375,8 +392,9 @@ public class FileExplorerState extends State {
                 public void clicked(InputEvent event, float x, float y) {
 
                     if ((fileHandle.path().equals(root))/*||fileHandle.parent().path().toString()==root*/) {
-
+                        backTable = null;
                         showStorageAvailable();
+
                     } else {
                         showFilesAb(Gdx.files.absolute(fileHandle.parent().toString()), root);
                     }
@@ -468,11 +486,13 @@ public class FileExplorerState extends State {
 
             }
         } else {
+
             System.out.println("Não é diretório");
+            showStorageAvailable();
         }
 
 
-        scrollpane = new ScrollPane(innerContainer);
+        scrollpane = new ScrollPane(innerContainer, skin);
         scrollpane.setScrollingDisabled(true, false);
         container.add(scrollpane).fill().expand();
 
@@ -485,9 +505,22 @@ public class FileExplorerState extends State {
 
     private void actionBackkey() {
 
+        try {
+            Array<EventListener> x = backTable.getListeners();
+            for (EventListener event : x) {
+                if (event instanceof ClickListener) {
+                    Thread.sleep(300);
+                    ((ClickListener) event).clicked(null, 0, 0);
+                }
+            }
+        } catch (InterruptedException ex) {
+            System.out.println(ex);
+        } catch (NullPointerException ex) {
+            gsm.set(new MenuInicialState(gsm));
+            System.out.println(ex);
 
+        }
 
-        //dispose();
     }
 
 
@@ -510,6 +543,7 @@ public class FileExplorerState extends State {
     @Override
     public void render(SpriteBatch sb) {
 
+        Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 0f);
         sb.setProjectionMatrix(camOrtho.combined);
         sb.begin();
         //sb.draw(background, 0, 0, camOrtho.viewportWidth, camOrtho.viewportHeight);
