@@ -10,12 +10,13 @@ public class Molecula {
     public ArrayList<Atomo> atomos;
     public ArrayList<Ligacao> ligacoes;
 
+    public String titulo;
+
 
 
     //#############################
     // Rever, se será necessário utilizar static!!!!!!
     //#################
 
-    public static Molecula molecula;
 
 }

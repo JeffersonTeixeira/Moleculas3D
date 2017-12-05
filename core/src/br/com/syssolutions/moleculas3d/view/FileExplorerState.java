@@ -28,7 +28,7 @@ import br.com.syssolutions.moleculas3d.control.states.GameStateManager;
 import br.com.syssolutions.moleculas3d.control.states.State;
 import br.com.syssolutions.moleculas3d.model.Molecula;
 import br.com.syssolutions.moleculas3d.model.Moleculas3D;
-import br.com.syssolutions.moleculas3d.model.ReadMoleculaXML;
+import br.com.syssolutions.moleculas3d.model.ReadMolecula;
 
 /**
  * Created by jefferson on 24/10/17.
@@ -163,15 +163,6 @@ public class FileExplorerState extends State {
                 innerContainer.add(table);//.expand().fill();
 
                 innerContainer.row();
-
-                //scrollpane = new ScrollPane(innerContainer);
-                //   scrollpane.setScrollingDisabled(true, false);
-                // container.add(scrollpane).fill().expand();
-
-
-//                stage = new Stage();
-//                stage.addActor(container);
-//                Gdx.input.setInputProcessor(stage);
 
             }
         }
@@ -312,7 +303,7 @@ public class FileExplorerState extends State {
 
 
                                 try {
-                                    Molecula mol = ReadMoleculaXML.read(fl, false);
+                                    Molecula mol = ReadMolecula.read(fl, false);
 
 
                                     lastPath = fl.parent().toString();
@@ -457,7 +448,7 @@ public class FileExplorerState extends State {
 
 
                                 try {
-                                    Molecula mol = ReadMoleculaXML.read(fl, true);
+                                    Molecula mol = ReadMolecula.read(fl, true);
                                     lastPath = fl.parent().toString();
 
                                     Visualizador3DState.setMolecula(mol);
@@ -517,6 +508,7 @@ public class FileExplorerState extends State {
             System.out.println(ex);
         } catch (NullPointerException ex) {
             gsm.set(new MenuInicialState(gsm));
+            dispose();
             System.out.println(ex);
 
         }
@@ -543,7 +535,7 @@ public class FileExplorerState extends State {
     @Override
     public void render(SpriteBatch sb) {
 
-        Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 0f);
+        Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 0f);
         sb.setProjectionMatrix(camOrtho.combined);
         sb.begin();
         //sb.draw(background, 0, 0, camOrtho.viewportWidth, camOrtho.viewportHeight);

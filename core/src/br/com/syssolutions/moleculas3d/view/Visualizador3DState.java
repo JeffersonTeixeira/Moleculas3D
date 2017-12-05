@@ -3,25 +3,35 @@ package br.com.syssolutions.moleculas3d.view;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
+import br.com.syssolutions.moleculas3d.Utils.FontGenerator;
 import br.com.syssolutions.moleculas3d.control.states.GameStateManager;
 import br.com.syssolutions.moleculas3d.control.states.State;
 import br.com.syssolutions.moleculas3d.model.DrawSpaceFillingModel;
@@ -58,6 +68,9 @@ public class Visualizador3DState extends State {
     public Environment environment;
     public boolean loading;
 
+    private boolean mostrarInfo = true;
+    private Window molinfo;
+
     //Itens do menu de configurações:
     private Stage stage;
     private Skin skinVisualizador3D;
@@ -71,7 +84,9 @@ public class Visualizador3DState extends State {
     private Button voltarbtn;
     private Button ajudabtn;
     private Button infobtn;
-    private DirectionalLight directionalLight;
+
+    private Label.LabelStyle labelStyle;
+    private Label labelTitulo;
 
 
     //Variáveis para controlar os Gestos com touch
@@ -105,20 +120,18 @@ public class Visualizador3DState extends State {
         cam.update();
 
 //        camera_position = cam.position;
-
         camController = new CameraInputController(cam);
 
         buildStage();
 
-        //Adicionar
+
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
-        //GestureDetector gd = new GestureDetector(this);
         multiplexer.addProcessor(camController);
-        // multiplexer.addProcessor(gd);
-        //  multiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(multiplexer);
 
+        //Carrega o Modelo padrão de visualização:
+//?????????????????
 
     }
 
@@ -150,6 +163,158 @@ public class Visualizador3DState extends State {
 
         criaBotoesVisualizacao();
 
+
+        mostrarTituloMol(molecula.titulo);
+
+
+    }
+
+
+    private void buildInfoWindow() {
+
+        Table container = new Table();
+
+
+        float windowWidth = Gdx.graphics.getWidth() - (Gdx.graphics.getWidth() * 0.10f);
+        float windowHeight = Gdx.graphics.getHeight() - (Gdx.graphics.getHeight() * 0.15f);
+
+
+        Skin skinWin = new Skin();
+
+        //Criando Background
+        Pixmap btPixmap = new Pixmap((int) windowWidth, (int) windowHeight, Pixmap.Format.RGB888);
+        skinWin.add("background", new Texture(btPixmap));
+
+        //Criando a fonte
+        FontGenerator fontTitulo = new FontGenerator(50, "VeraBd.ttf", null);
+        Window.WindowStyle windowStyle = new Window.WindowStyle();
+        windowStyle.titleFont = fontTitulo.getFont();
+
+
+        molinfo = new Window("", windowStyle);
+        molinfo.setBackground(skinWin.newDrawable("background", 0, 0, 0, 0.85f));
+        //molinfo.pack();
+
+
+        ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
+        ScrollPane scrollPane;// = new ScrollPane(container, scrollPaneStyle);
+
+
+
+
+
+
+
+
+//        molinfo.debugTable();
+
+
+        if (infoReader() == null) {
+            Label.LabelStyle labelStyle = new Label.LabelStyle();
+            labelStyle.font = new FontGenerator(70, "VeraBd.ttf", null).getFont();
+
+
+            Label none = new Label("Nenhuma informação disponível.", labelStyle);
+            none.setWrap(true);
+
+            molinfo.add(none).width(windowWidth).row();
+
+            scrollPane = null;
+        }else{
+            container.add(infoReader()).width(windowWidth).align(Align.topLeft).row();
+            container.debug();
+
+            scrollPane = new ScrollPane(container,scrollPaneStyle);
+
+
+
+            molinfo.add(scrollPane);
+        }
+
+
+        molinfo.debug();
+
+
+        molinfo.setSize(windowWidth, windowHeight);
+        molinfo.setPosition((Gdx.graphics.getWidth() / 2) - (molinfo.getWidth() / 2), (Gdx.graphics.getHeight() - infobtn.getHeight()) - molinfo.getHeight());
+
+        scrollPane.setFillParent(true)        ;
+        //molinfo.add(scrollPane).fill().expand();
+        stage.addActor(molinfo);
+    }
+
+    private Label infoReader() {
+
+
+        Label.LabelStyle style = labelStyle;
+
+
+
+
+        Label label = new Label("A Molécula é assim assim e assado foi decoberta por alguém em algum ano " +
+                "do calendario gregoriano " +
+                "ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? ", style);
+        label.setWrap(true);
+
+
+        return label;
+
+
+    }
+
+    private void mostrarTituloMol(String titulo) {
+
+        if (!titulo.equals("")) {
+
+
+            labelStyle = new Label.LabelStyle();
+
+            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+            parameter.borderWidth = 5f;
+
+            FontGenerator fontTitulo = new FontGenerator(70, "VeraBd.ttf", parameter);
+            labelStyle.font = fontTitulo.getFont();
+
+
+            if (titulo.length() > 10 && titulo.length() < 18) {
+
+            }
+
+
+            labelTitulo = new Label(titulo, labelStyle);
+
+
+            //labelTitulo.setWrap(true);
+
+
+//            float width = 300f ;//(voltarbtn.getWidth()+infobtn.getWidth())-Gdx.graphics.getWidth();
+//
+//            labelTitulo.setWidth(width);
+//            labelTitulo.pack();
+//            labelTitulo.setWidth(width);
+
+            //   labelTitulo = new Label("@@@@@@@@@\n@@@@@@@@@", labelStyle);
+
+
+            labelTitulo.setPosition(((Gdx.graphics.getWidth() / 2) - (labelTitulo.getWidth() / 2)), Gdx.graphics.getHeight() - labelTitulo.getHeight());
+            stage.addActor(labelTitulo);
+
+        }
+
+
+    }
+
+    private void mostrarInfo() {
+
+        if (molinfo == null) {
+            buildInfoWindow();
+        }
+
+
+        molinfo.setVisible(mostrarInfo);
+        mostrarInfo = !mostrarInfo;
+
+
     }
 
     private void criaBotoesVisualizacao() {
@@ -170,7 +335,7 @@ public class Visualizador3DState extends State {
 
         stage.addActor(spaceFillingBtn);
         stage.addActor(stickAndBallBtn);
-        stage.addActor(stickBtn);
+        // stage.addActor(stickBtn);
 
         addListenerBotoes();
     }
@@ -208,6 +373,15 @@ public class Visualizador3DState extends State {
             }
         });
 
+        infobtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("oi");
+                mostrarInfo();
+
+            }
+        });
+
 
     }
 
@@ -217,8 +391,8 @@ public class Visualizador3DState extends State {
 
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        //environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, (cam.up.x - 1f), (cam.up.x - 0.8f), (cam.up.x - 0.2f)));
+        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        //environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, (cam.up.x - 1f), (cam.up.x - 0.8f), (cam.up.x - 0.2f)));
 
 
         //cam.up.x;
@@ -248,9 +422,11 @@ public class Visualizador3DState extends State {
     private void actionBackkey() {
         if (voltaArmazenamento) {
             gsm.set(new FileExplorerState(gsm));
+            dispose();
 
         } else {
             gsm.set(new ListMolBibliotecaState(gsm));
+            dispose();
         }
 
         dispose();
@@ -275,7 +451,7 @@ public class Visualizador3DState extends State {
     public void render(SpriteBatch sb) {
 
 
-        carregaConfAmbiente();
+        //carregaConfAmbiente();
         switch (visualizacao) {
 
             case SPACE_FILLING:
@@ -302,7 +478,7 @@ public class Visualizador3DState extends State {
         }
 
 
-        Gdx.gl.glClearColor(0.3f, 1, 1, 0);
+        Gdx.gl.glClearColor(153 / 250f, 191 / 250f, 230 / 250f, 0f);
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
@@ -318,10 +494,14 @@ public class Visualizador3DState extends State {
 
     @Override
     public void dispose() {
-        modelBatch.dispose();
-        instances.clear();
-        stage.dispose();
-        skinVisualizador3D.dispose();
+        try {
+            modelBatch.dispose();
+            instances.clear();
+            stage.dispose();
+            skinVisualizador3D.dispose();
+        } catch (IllegalArgumentException ex) {
+
+        }
 
 
     }

@@ -42,7 +42,7 @@ public class DrawSpaceFillingModel {
 
             //Definir tamanho do Átomo
             float raioAtomico;
-            raioAtomico = molecula.atomos.get(i).getRaioAtomico(molecula.atomos.get(i).simbolo);
+            raioAtomico = molecula.atomos.get(i).getRaioAtomico(molecula.atomos.get(i).simbolo)*1.5f;
             sphereInstace.transform.scale(raioAtomico, raioAtomico, raioAtomico);
 
             this.instances.add(sphereInstace);

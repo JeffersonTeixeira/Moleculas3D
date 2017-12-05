@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * Created by jefferson on 21/03/17.
  */
 
-public class ReadMoleculaXML {
+public class ReadMolecula {
     public static Molecula read(ItemBiblioteca itemBiblioteca) throws IOException {
 
         String filename = itemBiblioteca.getFilename();
@@ -30,7 +30,7 @@ public class ReadMoleculaXML {
 
         BufferedReader reader = new BufferedReader(isr);
 
-        return read(filename, reader);
+        return read(filename, itemBiblioteca.getName(0), reader);
 
 
     }
@@ -56,17 +56,18 @@ public class ReadMoleculaXML {
         BufferedReader reader = new BufferedReader(isr);
 
 
-        return read(filename, reader);
+        return read(filename, filename, reader);
 
 
     }
 
 
-    private static Molecula read(String filename, BufferedReader reader) throws IOException {
+    private static Molecula read(String filename, String name, BufferedReader reader) throws IOException {
         System.out.println("Reading MOL");
 
 
         Molecula molecula = new Molecula();
+        molecula.titulo=name;
         ArrayList<Atomo> atoms = new ArrayList<Atomo>();
         molecula.atomos = atoms;
         ArrayList<Ligacao> bonds = new ArrayList<Ligacao>();

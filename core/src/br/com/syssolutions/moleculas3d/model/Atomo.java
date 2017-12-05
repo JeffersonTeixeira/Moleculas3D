@@ -49,9 +49,9 @@ public class Atomo {
             cores[1] = 181f;
             cores[2] = 181f;
         } else if (this.simbolo.contentEquals("C")) {
-            cores[0] = 144f;
-            cores[1] = 144f;
-            cores[2] = 144f;
+            cores[0] = 50f;
+            cores[1] = 50f;
+            cores[2] = 50f;
         } else if (this.simbolo.contentEquals("N")) {
             cores[0] = 48f;
             cores[1] = 80f;

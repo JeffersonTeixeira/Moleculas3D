@@ -28,7 +28,7 @@ import br.com.syssolutions.moleculas3d.model.Biblioteca;
 import br.com.syssolutions.moleculas3d.model.ItemBiblioteca;
 import br.com.syssolutions.moleculas3d.model.Molecula;
 import br.com.syssolutions.moleculas3d.model.Moleculas3D;
-import br.com.syssolutions.moleculas3d.model.ReadMoleculaXML;
+import br.com.syssolutions.moleculas3d.model.ReadMolecula;
 
 /**
  * Created by jefferson on 19/03/17.
@@ -43,7 +43,7 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
     private Skin skin;
     private Pixmap btPixmap;
     private float alturaTextField = Gdx.graphics.getHeight() / 10;
-    private float larguraTextField = (Gdx.graphics.getWidth() * (0.75f));
+    private float larguraTextField = (Gdx.graphics.getWidth());
 
     private ScrollPane scrollPane;
     private List programList;
@@ -53,6 +53,8 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
 
     private boolean listDragging;
     private boolean buscaFocus;
+
+    private int lastXDragg, lastYDragg;
 
 
     private static final String UPPERCASE_ASCII =
@@ -82,7 +84,7 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
 
         camOrtho = new OrthographicCamera();
         camOrtho.setToOrtho(false, Moleculas3D.WIDTH, Moleculas3D.HEIGHT);
-        background = new Texture("ui-imagens/background.jpg");
+        background = new Texture("ui-imagens/backgroundBlack.png");
 
         buildStage();
         InputMultiplexer multiplexer = new InputMultiplexer();
@@ -99,7 +101,7 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
         stage.clear();
 
         skin = new Skin();
-        skin.add("font", new FontGenerator(120, "Vera.ttf", null).getFont());
+        skin.add("font", new FontGenerator(115, "Vera.ttf", null).getFont());
 
         //Textura do Texfield:
         btPixmap = new Pixmap((int) larguraTextField, (int) alturaTextField, Pixmap.Format.RGB888);
@@ -152,6 +154,9 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
         Skin skin2 = new Skin();
 
         ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
+        style.vScrollKnob = new Image(new Texture("ui-imagens/listmolbiblioteca/scrollBarThumb.png")).getDrawable();
+
+
         skin2.add("default", style);
 
         List.ListStyle listStyle = new List.ListStyle();
@@ -163,6 +168,7 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
         scrollPane = new ScrollPane(null, skin2);
         scrollPane.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - alturaTextField);
         scrollPane.setScrollingDisabled(true, false);
+
         programList = new List<String>(listStyle);
 
 
@@ -245,7 +251,7 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
             for (Map.Entry<String, ItemBiblioteca> entry : Biblioteca.getBiblioteca().entrySet()) {
 
 
-                if (toUpperCaseSansAccent(entry.getKey()).contains(toUpperCaseSansAccent(search)))
+                if (toUpperCaseSansAccent(entry.getValue().getAllNames()).contains(toUpperCaseSansAccent(search)))
                     results.add(entry.getKey());
             }
 
@@ -290,10 +296,11 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
 
     private void carregaMoleculaSelecionada() {
         try {
-            Molecula mol = ReadMoleculaXML.read(Biblioteca.getBiblioteca().get(programList.getSelected()));
+            Molecula mol = ReadMolecula.read(Biblioteca.getBiblioteca().get(programList.getSelected()));
 
             Visualizador3DState.setMolecula(mol);
             gsm.set(new Visualizador3DState(gsm, false));
+
         } catch (Exception e) {
             System.out.println("Falha ao carregar molécula" + e);
         }
@@ -328,13 +335,21 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
         if (!listDragging && !buscaFocus /*&& idSelecionado == programList.getSelectedIndex() && !(TimeUtils.nanoTime() - lastTouchTime > tapCountInterval)*/) {
             carregaMoleculaSelecionada();
         }
+        lastXDragg = 0;
+        lastYDragg = 0;
 
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        listDragging = true;
+
+        if ((lastXDragg != 0 && lastXDragg != screenX) || (lastYDragg != 0 && lastYDragg != screenY)) {
+            listDragging = true;
+        }
+        lastXDragg = screenX;
+        lastYDragg = screenY;
+
         return false;
     }
 
