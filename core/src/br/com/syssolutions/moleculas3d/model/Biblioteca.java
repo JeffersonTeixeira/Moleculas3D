@@ -130,7 +130,7 @@ public abstract class Biblioteca {
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "caffeine.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "chloro_a.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cholesterol.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "citric_acid.cml"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "citric_acid.cml","Ácido cítrico","citric acid","citrato de hidrogênio","ácido 2-hidroxi-1,2,3-propanotricarboxílico","C6H8O7"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "coa.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cubane.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cyclobutane.cml"));
@@ -138,11 +138,11 @@ public abstract class Biblioteca {
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cyclohexane.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cyclopentane.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cyclopropane.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cytosine.cml","Citosina","dna",""));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cytosine.cml","Citosina","dna","cytosine"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "D-alanine.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "d-allose.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "D-allo-threonine.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "d-altrose.cml"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "d-altrose.cml","Altrose","C6H12O6"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "d-arabinose.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "D-arginine.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "D-asparagine.cml"));
@@ -239,7 +239,7 @@ public abstract class Biblioteca {
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "L-tryptophan.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "L-tyrosine.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "L-valine.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "methane.cml","Metano","CH4"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "methane.cml","Metano","methane","CH4"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "methanethiol.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "methanol.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "methylamine.cml"));

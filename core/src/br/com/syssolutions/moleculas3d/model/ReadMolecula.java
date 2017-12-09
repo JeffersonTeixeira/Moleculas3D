@@ -67,6 +67,7 @@ public class ReadMolecula {
 
 
         Molecula molecula = new Molecula();
+        molecula.filename=filename;
         molecula.titulo=name;
         ArrayList<Atomo> atoms = new ArrayList<Atomo>();
         molecula.atomos = atoms;

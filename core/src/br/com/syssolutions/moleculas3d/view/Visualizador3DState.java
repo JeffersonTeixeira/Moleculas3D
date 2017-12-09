@@ -3,6 +3,7 @@ package br.com.syssolutions.moleculas3d.view;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -21,15 +22,24 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 import br.com.syssolutions.moleculas3d.Utils.FontGenerator;
 import br.com.syssolutions.moleculas3d.control.states.GameStateManager;
@@ -87,6 +97,8 @@ public class Visualizador3DState extends State {
 
     private Label.LabelStyle labelStyle;
     private Label labelTitulo;
+
+    private String patchInfo = "mol/info/";
 
 
     //Variáveis para controlar os Gestos com touch
@@ -172,12 +184,8 @@ public class Visualizador3DState extends State {
 
     private void buildInfoWindow() {
 
-        Table container = new Table();
-
-
         float windowWidth = Gdx.graphics.getWidth() - (Gdx.graphics.getWidth() * 0.10f);
         float windowHeight = Gdx.graphics.getHeight() - (Gdx.graphics.getHeight() * 0.15f);
-
 
         Skin skinWin = new Skin();
 
@@ -190,28 +198,14 @@ public class Visualizador3DState extends State {
         Window.WindowStyle windowStyle = new Window.WindowStyle();
         windowStyle.titleFont = fontTitulo.getFont();
 
-
         molinfo = new Window("", windowStyle);
         molinfo.setBackground(skinWin.newDrawable("background", 0, 0, 0, 0.85f));
-        //molinfo.pack();
-
-
-        ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
-        ScrollPane scrollPane;// = new ScrollPane(container, scrollPaneStyle);
-
-
-
-
-
-
-
-
-//        molinfo.debugTable();
-
 
         if (infoReader() == null) {
+
+
             Label.LabelStyle labelStyle = new Label.LabelStyle();
-            labelStyle.font = new FontGenerator(70, "VeraBd.ttf", null).getFont();
+            labelStyle.font = new FontGenerator(50, "VeraBd.ttf", null).getFont();
 
 
             Label none = new Label("Nenhuma informação disponível.", labelStyle);
@@ -219,45 +213,89 @@ public class Visualizador3DState extends State {
 
             molinfo.add(none).width(windowWidth).row();
 
-            scrollPane = null;
-        }else{
-            container.add(infoReader()).width(windowWidth).align(Align.topLeft).row();
-            container.debug();
+        } else {
+            Table container = new Table();
 
-            scrollPane = new ScrollPane(container,scrollPaneStyle);
+            ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
+            ScrollPane scrollPane;
 
 
+            for (Widget widget : infoReader()) {
+
+                container.add(widget).width(windowWidth).align(Align.topLeft).row();
+
+            }
+
+            scrollPane = new ScrollPane(container, scrollPaneStyle);
 
             molinfo.add(scrollPane);
+
+            scrollPane.setFillParent(true);
         }
-
-
-        molinfo.debug();
-
 
         molinfo.setSize(windowWidth, windowHeight);
         molinfo.setPosition((Gdx.graphics.getWidth() / 2) - (molinfo.getWidth() / 2), (Gdx.graphics.getHeight() - infobtn.getHeight()) - molinfo.getHeight());
 
-        scrollPane.setFillParent(true)        ;
-        //molinfo.add(scrollPane).fill().expand();
         stage.addActor(molinfo);
     }
 
-    private Label infoReader() {
+    private ArrayList<Widget> infoReader() {
+
+        if (molecula.filename == null) {
+            return null;
+
+        } else {
+            try {
 
 
-        Label.LabelStyle style = labelStyle;
+                FileHandle fh = new FileHandle(molecula.filename);
+
+                String name = fh.nameWithoutExtension();
+
+                InputStream is = Gdx.files.internal(patchInfo + name + ".info").read();
+
+                Scanner scanner = new Scanner(is);
 
 
+                ArrayList<Widget> arrayList = new ArrayList<Widget>();
 
 
-        Label label = new Label("A Molécula é assim assim e assado foi decoberta por alguém em algum ano " +
-                "do calendario gregoriano " +
-                "ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? ", style);
-        label.setWrap(true);
+                Label.LabelStyle style = new Label.LabelStyle();
+                style.font = new FontGenerator(50, "VeraBd.ttf", null).getFont();
 
 
-        return label;
+                while (scanner.hasNext()) {
+
+                    String line = scanner.nextLine();
+
+                    if (line.contains("#img")) {
+
+                        String token[] = line.split("#img");
+
+                        String patchImg = token[1].trim();
+                        Image image = new Image(new Texture(Gdx.files.internal(patchInfo + patchImg)));
+                        image.setSize(10f, 10f);
+
+                        arrayList.add(image);
+
+
+                    } else {
+                        Label label = new Label(line, style);
+                        label.setWrap(true);
+                        arrayList.add(label);
+                    }
+
+
+                }
+                return arrayList;
+
+            } catch (GdxRuntimeException e) {
+
+                return null;
+            }
+
+
+        }
 
 
     }
@@ -282,18 +320,6 @@ public class Visualizador3DState extends State {
 
 
             labelTitulo = new Label(titulo, labelStyle);
-
-
-            //labelTitulo.setWrap(true);
-
-
-//            float width = 300f ;//(voltarbtn.getWidth()+infobtn.getWidth())-Gdx.graphics.getWidth();
-//
-//            labelTitulo.setWidth(width);
-//            labelTitulo.pack();
-//            labelTitulo.setWidth(width);
-
-            //   labelTitulo = new Label("@@@@@@@@@\n@@@@@@@@@", labelStyle);
 
 
             labelTitulo.setPosition(((Gdx.graphics.getWidth() / 2) - (labelTitulo.getWidth() / 2)), Gdx.graphics.getHeight() - labelTitulo.getHeight());
@@ -376,7 +402,6 @@ public class Visualizador3DState extends State {
         infobtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("oi");
                 mostrarInfo();
 
             }

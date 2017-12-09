@@ -43,7 +43,6 @@ public class FileExplorerState extends State {
 
     private Skin skin;
     private Texture background;
-    private TextureAtlas textureAtlas;
 
     private Texture folderT, fileT, molT, folderUP;
 
@@ -551,7 +550,6 @@ public class FileExplorerState extends State {
 
         stage.dispose();
         skin.dispose();
-        textureAtlas.dispose();
         background.dispose();
 
     }

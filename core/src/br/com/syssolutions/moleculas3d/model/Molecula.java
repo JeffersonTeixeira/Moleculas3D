@@ -12,6 +12,7 @@ public class Molecula {
 
     public String titulo;
 
+    public String filename;
 
 
     //#############################
