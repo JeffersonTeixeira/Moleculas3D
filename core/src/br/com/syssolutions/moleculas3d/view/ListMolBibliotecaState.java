@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -40,7 +41,7 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
     private Texture background;
     private TextField buscaTxField;
     private Stage stage;
-    private Skin skin;
+    private Skin skin, skin2;
     private Pixmap btPixmap;
     private float alturaTextField = Gdx.graphics.getHeight() / 10;
     private float larguraTextField = (Gdx.graphics.getWidth());
@@ -49,12 +50,16 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
     private List programList;
 
     private Array<String> lista;
-    private Array<String> fullLista;
+    private static Array<String> fullLista;
 
     private boolean listDragging;
     private boolean buscaFocus;
 
+    private Label listaVazia;
+
     private int lastXDragg, lastYDragg;
+
+    private FontGenerator textFieldfont, listFont, labelFont;
 
 
     private static final String UPPERCASE_ASCII =
@@ -101,7 +106,9 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
         stage.clear();
 
         skin = new Skin();
-        skin.add("font", new FontGenerator(115, "Vera.ttf", null).getFont());
+
+        textFieldfont = new FontGenerator(115, "Vera.ttf", null);
+        skin.add("font", textFieldfont.getFont());
 
         //Textura do Texfield:
         btPixmap = new Pixmap((int) larguraTextField, (int) alturaTextField, Pixmap.Format.RGB888);
@@ -151,7 +158,7 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
         stage.addActor(buscaTxField);
 
 
-        Skin skin2 = new Skin();
+        skin2 = new Skin();
 
         ScrollPane.ScrollPaneStyle style = new ScrollPane.ScrollPaneStyle();
         style.vScrollKnob = new Image(new Texture("ui-imagens/listmolbiblioteca/scrollBarThumb.png")).getDrawable();
@@ -160,7 +167,8 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
         skin2.add("default", style);
 
         List.ListStyle listStyle = new List.ListStyle();
-        listStyle.font = new FontGenerator(90, "Vera.ttf", null).getFont();
+        listFont = new FontGenerator(90, "Vera.ttf", null);
+        listStyle.font = listFont.getFont();
 
         listStyle.selection = new Image(new Texture("ui-imagens/listmolbiblioteca/selection.png")).getDrawable();
 
@@ -201,6 +209,19 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
         });
 
 
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+
+        labelFont = new FontGenerator(70, "Vera.ttf", null);
+        labelStyle.font = labelFont.getFont();
+
+        listaVazia = new Label("Nenhum item encontrado", labelStyle);
+
+        listaVazia.setPosition((Gdx.graphics.getWidth() / 2) - listaVazia.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        listaVazia.setWrap(true);
+        listaVazia.setVisible(false);
+
+        stage.addActor(listaVazia);
+
     }
 
 
@@ -236,12 +257,6 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
 
     }
 
-    @Override
-    public void dispose() {
-        stage.dispose();
-        btPixmap.dispose();
-
-    }
 
     public Array<String> molSearch(String search) {
 
@@ -253,6 +268,13 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
 
                 if (toUpperCaseSansAccent(entry.getValue().getAllNames()).contains(toUpperCaseSansAccent(search)))
                     results.add(entry.getKey());
+            }
+            if (results.size == 0) {
+                listaVazia.setVisible(true);
+
+
+            } else {
+                listaVazia.setVisible(false);
             }
 
             return results;
@@ -361,6 +383,25 @@ public class ListMolBibliotecaState extends State implements InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    @Override
+    public void dispose() {
+        try{
+            stage.dispose();
+            btPixmap.dispose();
+            background.dispose();
+            skin.dispose();
+            skin2.dispose();
+            textFieldfont.dispose();
+            listFont.dispose();
+            labelFont.dispose();
+        }catch (Exception e){
+
+        }
+
+
+
     }
 
 }

@@ -42,9 +42,8 @@ public class FileExplorerState extends State {
     private OrthographicCamera camOrtho;
 
     private Skin skin;
-    private Texture background;
 
-    private Texture folderT, fileT, molT, folderUP;
+    private Texture background, folderT, fileT, molT, folderUP;
 
     private static Table container, backTable;
 
@@ -53,6 +52,9 @@ public class FileExplorerState extends State {
     private ScrollPane scrollpane;
     private LabelStyle labelStyle;
     private ScrollPane.ScrollPaneStyle scrollPaneStyle;
+
+
+    private FontGenerator fontTitulo;
 
 
     public FileExplorerState(GameStateManager gsm) {
@@ -115,7 +117,7 @@ public class FileExplorerState extends State {
 
         background = new Texture("ui-imagens/background.jpg");
         labelStyle = new Label.LabelStyle();
-        FontGenerator fontTitulo = new FontGenerator(40, "VeraBd.ttf", null);
+        fontTitulo = new FontGenerator(40, "VeraBd.ttf", null);
         labelStyle.font = fontTitulo.getFont();
 
         scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
@@ -198,7 +200,7 @@ public class FileExplorerState extends State {
 
             }
         } catch (NullPointerException ex) {
-            System.out.println(ex);
+            System.out.println("Show Storage Avaliable" + ex);
         }
 
         scrollpane = new ScrollPane(innerContainer, skin);
@@ -287,8 +289,8 @@ public class FileExplorerState extends State {
                             file.extension().equals("mol2"))) {
                         //innerContainer.add(new Image(fileT)).expandY().fillY();
 
-                        table.add(new Image(fileT)).expandY().fillY().space(10f).left();
-                        table.add(new Label(file.name(), labelStyle)).expandY().fillY().width(container.getWidth() - fileT.getWidth()).left();
+                        //  table.add(new Image(fileT)).expandY().fillY().space(10f).left();
+                        //   table.add(new Label(file.name(), labelStyle)).expandY().fillY().width(container.getWidth() - fileT.getWidth()).left();
 
                     } else {
                         //innerContainer.add(new Image(molT)).expandY().fillY();
@@ -432,8 +434,8 @@ public class FileExplorerState extends State {
                             file.extension().equals("mol2"))) {
                         //innerContainer.add(new Image(fileT)).expandY().fillY();
 
-                        table.add(new Image(fileT)).expandY().fillY().space(10f).left();
-                        table.add(new Label(file.name(), labelStyle)).expandY().fillY().width(container.getWidth() - fileT.getWidth()).left();
+                        //  table.add(new Image(fileT)).expandY().fillY().space(10f).left();
+                        //   table.add(new Label(file.name(), labelStyle)).expandY().fillY().width(container.getWidth() - fileT.getWidth()).left();
 
                     } else {
                         //innerContainer.add(new Image(molT)).expandY().fillY();
@@ -507,8 +509,9 @@ public class FileExplorerState extends State {
             System.out.println(ex);
         } catch (NullPointerException ex) {
             gsm.set(new MenuInicialState(gsm));
+            lastPath = null;
             dispose();
-            System.out.println(ex);
+            //System.out.println("ActionBackKey() "+ex);
 
         }
 
@@ -547,10 +550,20 @@ public class FileExplorerState extends State {
 
     @Override
     public void dispose() {
+        try {
+            stage.dispose();
+            skin.dispose();
+            background.dispose();
+            folderT.dispose();
+            fileT.dispose();
+            molT.dispose();
+            folderUP.dispose();
+            fontTitulo.dispose();
 
-        stage.dispose();
-        skin.dispose();
-        background.dispose();
+        } catch (Exception e) {
+
+        }
+
 
     }
 }

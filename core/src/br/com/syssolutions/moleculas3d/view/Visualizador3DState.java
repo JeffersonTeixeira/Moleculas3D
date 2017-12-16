@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -28,15 +27,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -71,19 +67,20 @@ public class Visualizador3DState extends State {
 
     public CameraInputController camController;
 
-    public ModelBatch modelBatch;
+    public static ModelBatch modelBatch;
+    private TextureAtlas textureAtlasPack;
 
     public Array<ModelInstance> instances = new Array<ModelInstance>();
     //public ModelInstance instance;
-    public Environment environment;
+    public static Environment environment;
     public boolean loading;
 
     private boolean mostrarInfo = true;
-    private Window molinfo;
+    private Window winMolInfo;
 
     //Itens do menu de configurações:
     private Stage stage;
-    private Skin skinVisualizador3D;
+    private Skin skinVisualizador3D, skinWin;
 
 
     private ButtonGroup visuGroup;
@@ -100,6 +97,17 @@ public class Visualizador3DState extends State {
 
     private String patchInfo = "mol/info/";
 
+    //Variáveis para mostrar ajuda
+    private boolean mostrarAjudaLoaded;
+    private static Image rotacionarIcon;
+    private static Image zoomMaisIcon;
+    private static Image zoomMenosIcon;
+
+    private FontGenerator fontTituloMol, labelFont;
+
+    private Pixmap windowsBackGroundPixmap;
+    private Texture winTexture;
+
 
     //Variáveis para controlar os Gestos com touch
     float zoom; //Mantem o Valor do zoom atual;
@@ -113,9 +121,12 @@ public class Visualizador3DState extends State {
     public Visualizador3DState(GameStateManager gsm, boolean voltaArmazenamento) {
         super(gsm);
         this.voltaArmazenamento = voltaArmazenamento;
-        //molecula = criaMoleculaAgua();
 
-        modelBatch = new ModelBatch();
+
+        if (modelBatch == null) {
+            modelBatch = new ModelBatch();
+        }
+
 
         visualizacao = SPACE_FILLING;
 
@@ -143,16 +154,19 @@ public class Visualizador3DState extends State {
         Gdx.input.setInputProcessor(multiplexer);
 
         //Carrega o Modelo padrão de visualização:
-//?????????????????
 
+        spaceFillingBtn.setChecked(true);
     }
 
     private void buildStage() {
 
 
+        textureAtlasPack = new TextureAtlas("ui-imagens/visualizador3d.pack");
+
+
         skinVisualizador3D = new Skin(
-                Gdx.files.internal("ui-imagens/visualizador3d.json"),
-                new TextureAtlas("ui-imagens/visualizador3d.pack"));
+
+                Gdx.files.internal("ui-imagens/visualizador3d.json"), textureAtlasPack);
 
         stage = new Stage();
         stage.clear();
@@ -187,31 +201,35 @@ public class Visualizador3DState extends State {
         float windowWidth = Gdx.graphics.getWidth() - (Gdx.graphics.getWidth() * 0.10f);
         float windowHeight = Gdx.graphics.getHeight() - (Gdx.graphics.getHeight() * 0.15f);
 
-        Skin skinWin = new Skin();
+        skinWin = new Skin();
 
         //Criando Background
-        Pixmap btPixmap = new Pixmap((int) windowWidth, (int) windowHeight, Pixmap.Format.RGB888);
-        skinWin.add("background", new Texture(btPixmap));
+        windowsBackGroundPixmap = new Pixmap((int) windowWidth, (int) windowHeight, Pixmap.Format.RGB888);
+        winTexture = new Texture(windowsBackGroundPixmap);
+        skinWin.add("background", winTexture);
 
         //Criando a fonte
-        FontGenerator fontTitulo = new FontGenerator(50, "VeraBd.ttf", null);
+        //FontGenerator fontTituloWin = new FontGenerator(10, "VeraBd.ttf", null);
         Window.WindowStyle windowStyle = new Window.WindowStyle();
-        windowStyle.titleFont = fontTitulo.getFont();
+        windowStyle.titleFont = fontTituloMol.getFont();//Usada a font
 
-        molinfo = new Window("", windowStyle);
-        molinfo.setBackground(skinWin.newDrawable("background", 0, 0, 0, 0.85f));
+        winMolInfo = new Window("", windowStyle);
+        winMolInfo.setBackground(skinWin.newDrawable("background", 0, 0, 0, 0.85f));
+
+
+        labelFont = new FontGenerator(50, "VeraBd.ttf", null);
 
         if (infoReader() == null) {
 
 
             Label.LabelStyle labelStyle = new Label.LabelStyle();
-            labelStyle.font = new FontGenerator(50, "VeraBd.ttf", null).getFont();
+            labelStyle.font = labelFont.getFont();
 
 
             Label none = new Label("Nenhuma informação disponível.", labelStyle);
             none.setWrap(true);
 
-            molinfo.add(none).width(windowWidth).row();
+            winMolInfo.add(none).width(windowWidth).row();
 
         } else {
             Table container = new Table();
@@ -228,15 +246,15 @@ public class Visualizador3DState extends State {
 
             scrollPane = new ScrollPane(container, scrollPaneStyle);
 
-            molinfo.add(scrollPane);
+            winMolInfo.add(scrollPane);
 
             scrollPane.setFillParent(true);
         }
 
-        molinfo.setSize(windowWidth, windowHeight);
-        molinfo.setPosition((Gdx.graphics.getWidth() / 2) - (molinfo.getWidth() / 2), (Gdx.graphics.getHeight() - infobtn.getHeight()) - molinfo.getHeight());
+        winMolInfo.setSize(windowWidth, windowHeight);
+        winMolInfo.setPosition((Gdx.graphics.getWidth() / 2) - (winMolInfo.getWidth() / 2), (Gdx.graphics.getHeight() - infobtn.getHeight()) - winMolInfo.getHeight());
 
-        stage.addActor(molinfo);
+        stage.addActor(winMolInfo);
     }
 
     private ArrayList<Widget> infoReader() {
@@ -244,9 +262,8 @@ public class Visualizador3DState extends State {
         if (molecula.filename == null) {
             return null;
 
-        } else {
+        } else if (!voltaArmazenamento) {
             try {
-
 
                 FileHandle fh = new FileHandle(molecula.filename);
 
@@ -256,13 +273,10 @@ public class Visualizador3DState extends State {
 
                 Scanner scanner = new Scanner(is);
 
-
                 ArrayList<Widget> arrayList = new ArrayList<Widget>();
 
-
                 Label.LabelStyle style = new Label.LabelStyle();
-                style.font = new FontGenerator(50, "VeraBd.ttf", null).getFont();
-
+                style.font = labelFont.getFont();
 
                 while (scanner.hasNext()) {
 
@@ -274,17 +288,17 @@ public class Visualizador3DState extends State {
 
                         String patchImg = token[1].trim();
                         Image image = new Image(new Texture(Gdx.files.internal(patchInfo + patchImg)));
-                        image.setSize(10f, 10f);
+
+                        //image.setSize(100f,100f);
+
 
                         arrayList.add(image);
-
 
                     } else {
                         Label label = new Label(line, style);
                         label.setWrap(true);
                         arrayList.add(label);
                     }
-
 
                 }
                 return arrayList;
@@ -295,6 +309,8 @@ public class Visualizador3DState extends State {
             }
 
 
+        } else {
+            return null;
         }
 
 
@@ -310,16 +326,61 @@ public class Visualizador3DState extends State {
             FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
             parameter.borderWidth = 5f;
 
-            FontGenerator fontTitulo = new FontGenerator(70, "VeraBd.ttf", parameter);
-            labelStyle.font = fontTitulo.getFont();
+            fontTituloMol = new FontGenerator(70, "VeraBd.ttf", parameter);
+            labelStyle.font = fontTituloMol.getFont();
 
 
-            if (titulo.length() > 10 && titulo.length() < 18) {
+            if (titulo.length() > 13) {
 
+                String nomeDividido ;
+               // titulo = nomeDividido;
+
+
+                    if (titulo.charAt(13) == '-' || titulo.charAt(13) == ' ') {
+
+                        System.out.println("CharAt11 - ou \"\" ");
+
+                        String s1, s2;
+
+                        s1 = titulo.substring(0, 13);
+                        s2 = titulo.substring(14, titulo.length());
+
+                        System.out.println("s1= " + s1);
+                        System.out.println("s2= " + s2);
+
+                        nomeDividido = s1 + "\n" + s2;
+                    }else {
+
+                        String s1, s2;
+
+                        s1 = titulo.substring(0, 13);
+                        s2 = titulo.substring(13, titulo.length());
+
+
+                            nomeDividido=s1+"-\n"+s2;
+
+
+                    }
+
+
+                if(nomeDividido.length()>25){
+
+                    nomeDividido=nomeDividido.substring(0,23)+"...";
+
+
+                }
+
+
+
+
+                labelTitulo = new Label(nomeDividido, labelStyle);
+
+
+                //Dividir e terminar na linha abaixo
+
+            } else { //Não é necessário dividir
+                labelTitulo = new Label(titulo, labelStyle);
             }
-
-
-            labelTitulo = new Label(titulo, labelStyle);
 
 
             labelTitulo.setPosition(((Gdx.graphics.getWidth() / 2) - (labelTitulo.getWidth() / 2)), Gdx.graphics.getHeight() - labelTitulo.getHeight());
@@ -332,13 +393,56 @@ public class Visualizador3DState extends State {
 
     private void mostrarInfo() {
 
-        if (molinfo == null) {
+        if (winMolInfo == null) {
             buildInfoWindow();
         }
 
 
-        molinfo.setVisible(mostrarInfo);
+        winMolInfo.setVisible(mostrarInfo);
         mostrarInfo = !mostrarInfo;
+
+
+    }
+
+    private void mostrarAjuda() {
+
+        if (mostrarAjudaLoaded) {
+
+            rotacionarIcon.setVisible(!rotacionarIcon.isVisible());
+            zoomMaisIcon.setVisible(!zoomMaisIcon.isVisible());
+            zoomMenosIcon.setVisible(!zoomMenosIcon.isVisible());
+
+        } else {
+
+            float iconSize = Gdx.graphics.getWidth() * 0.25f;
+
+
+            if (rotacionarIcon == null) {
+                rotacionarIcon = new Image(new Texture("ui-imagens/ajudaicones/rotacionar.png"));//.getDrawable();
+                rotacionarIcon.setSize(iconSize, iconSize);
+                rotacionarIcon.setPosition(0, ajudabtn.getHeight());
+            }
+
+            if (zoomMaisIcon == null) {
+                zoomMaisIcon = new Image(new Texture("ui-imagens/ajudaicones/maiszoom.png"));
+                zoomMaisIcon.setSize(iconSize, iconSize);
+                zoomMaisIcon.setPosition(iconSize, ajudabtn.getHeight());
+            }
+
+            if (zoomMenosIcon == null) {
+                zoomMenosIcon = new Image(new Texture("ui-imagens/ajudaicones/menoszoom.png"));
+                zoomMenosIcon.setSize(iconSize, iconSize);
+                zoomMenosIcon.setPosition(iconSize * 2, ajudabtn.getHeight());
+            }
+
+            stage.addActor(rotacionarIcon);
+            stage.addActor(zoomMaisIcon);
+            stage.addActor(zoomMenosIcon);
+
+            mostrarAjudaLoaded = true;
+
+
+        }
 
 
     }
@@ -407,16 +511,27 @@ public class Visualizador3DState extends State {
             }
         });
 
+        ajudabtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                mostrarAjuda();
+
+            }
+        });
+
 
     }
 
 
     private void carregaConfAmbiente() {
 
+        if (environment == null) {
+            environment = new Environment();
+            environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+            environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        }
 
-        environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+
         //environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, (cam.up.x - 1f), (cam.up.x - 0.8f), (cam.up.x - 0.2f)));
 
 
@@ -445,16 +560,31 @@ public class Visualizador3DState extends State {
     }
 
     private void actionBackkey() {
-        if (voltaArmazenamento) {
-            gsm.set(new FileExplorerState(gsm));
-            dispose();
 
-        } else {
-            gsm.set(new ListMolBibliotecaState(gsm));
+        try {
+            if (winMolInfo.isVisible()) {
+                winMolInfo.setVisible(false);
+                Thread.sleep(300);
+            } else {
+                throw new NullPointerException();
+            }
+
+        } catch (NullPointerException e) {
+            if (voltaArmazenamento) {
+
+                gsm.set(new FileExplorerState(gsm));
+
+
+            } else {
+                gsm.set(new ListMolBibliotecaState(gsm));
+
+            }
             dispose();
+        } catch (InterruptedException e) {
+
         }
 
-        dispose();
+
     }
 
 
@@ -523,8 +653,18 @@ public class Visualizador3DState extends State {
             modelBatch.dispose();
             instances.clear();
             stage.dispose();
+
             skinVisualizador3D.dispose();
-        } catch (IllegalArgumentException ex) {
+            skinWin.dispose();
+
+            fontTituloMol.dispose();
+            labelFont.dispose();
+            textureAtlasPack.dispose();
+            windowsBackGroundPixmap.dispose();
+            winTexture.dispose();
+
+
+        } catch (Exception ex) {
 
         }
 

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 /**
  * Created by Jefferson on 31/07/2016.
  */
-public abstract class State implements Cloneable{
+public abstract class State{
 
     //protected OrthographicCamera cam; //Câmera
     protected PerspectiveCamera cam;
@@ -22,10 +22,6 @@ public abstract class State implements Cloneable{
         mouse = new Vector3();
     }
 
-
-    public Object clone() throws CloneNotSupportedException{
-        return (State) super.clone();
-    }
 
 
     protected abstract void handleInput(); //Entradas do usuário

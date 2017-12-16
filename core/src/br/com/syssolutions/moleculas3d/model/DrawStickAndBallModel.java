@@ -13,17 +13,6 @@ import com.badlogic.gdx.utils.Array;
 
 public class DrawStickAndBallModel {
 
-//    private static final String ESFERA_PATCH = "sphere.obj";
-//    private static final String SINGLE_STICK_PATCH = "single.obj";
-//    private static final String DOUBLE_STICK_PATCH = "double.obj";
-//    private static final String TRIPLE_STICK_PATCH = "triple.obj";
-//    private static final String QUAD_STICK_PATCH = "quad.obj";
-//
-//    private static Model SPHERE;
-//    private static Model BOND1;
-//    private static Model BOND2;
-//    private static Model BOND3;
-//    private static Model BOND4;
 
     private Array<ModelInstance> instances;
     private Molecula molecula;

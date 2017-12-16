@@ -59,20 +59,11 @@ public class ItemBiblioteca {
         this.filename = filename;
         this.name = name;
 
-
-        //allNames=String.join(",",name); //Java 8+
-
-
-        //System.out.println("Construtor... : " + name.toString());
-
         for (String s : name) {
 
             allNames = allNames + s;
 
         }
-
-        // System.out.println("allnames()"+allNames);
-
 
     }
 

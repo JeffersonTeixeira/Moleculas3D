@@ -3,6 +3,7 @@ package br.com.syssolutions.moleculas3d.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 /**
  * Created by jefferson on 30/10/16.
@@ -43,9 +44,19 @@ public class FontGenerator extends FreeTypeFontGenerator {
     */
         parameter.size = (Gdx.graphics.getHeight() * tamanNoProj) / 1776;
         BitmapFont font = this.generateFont(parameter);
-        this.dispose();
         this.font = font;
 
     }
 
+    @Override
+    public void dispose() {
+        try {
+            super.dispose();
+            this.font.dispose();
+        } catch (GdxRuntimeException e) {
+
+        }
+
+
+    }
 }

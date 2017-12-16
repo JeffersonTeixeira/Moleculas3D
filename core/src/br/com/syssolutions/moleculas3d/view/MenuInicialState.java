@@ -5,6 +5,7 @@ package br.com.syssolutions.moleculas3d.view;
  */
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -39,6 +40,9 @@ public class MenuInicialState extends State {
     private TextButton btBiblioteca;
     private TextButton btCartaoSD;
 
+    private FontGenerator fontTitulo,fontBtn;
+
+
 
     private OrthographicCamera camOrtho;
 
@@ -67,11 +71,15 @@ public class MenuInicialState extends State {
 
     @Override
     public void handleInput() {
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+
+
+        }
 
     }
 
     public void update(float dt) {
-        //handleInput();
+        handleInput();
     }
 
     public void render(SpriteBatch sb) {
@@ -90,7 +98,10 @@ public class MenuInicialState extends State {
 
         //Skin Botões:
         //Fonte do botão:
-        skin.add("btnFont", new FontGenerator(120, "Vera.ttf", null).getFont());
+        fontBtn = new FontGenerator(120, "Vera.ttf", null);
+
+
+        skin.add("btnFont", fontBtn.getFont());
 
         //Textura dos botões:
         btPixmap = new Pixmap((int) btnLargura, (int) btnAltura, Pixmap.Format.RGB888);
@@ -140,7 +151,7 @@ public class MenuInicialState extends State {
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.borderWidth = 5f;
 
-        FontGenerator fontTitulo = new FontGenerator(130, "VeraBd.ttf", parameter);
+        fontTitulo = new FontGenerator(130, "VeraBd.ttf", parameter);
 
         labelStyle.font = fontTitulo.getFont();
 
@@ -157,6 +168,8 @@ public class MenuInicialState extends State {
         stage.dispose();
         skin.dispose();
         btPixmap.dispose();
+        fontTitulo.dispose();
+
 
 
     }

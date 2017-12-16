@@ -47,7 +47,7 @@ public abstract class Biblioteca {
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "2-methylpropane.cml","isobutano","metil propano","Isobutane","Methylpropane","2-Methylpropane","C4H10"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "3-trigonal-planar.cml","Borano","BH3"));
         //bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "3-trigonal-pyramidal.cml","Amônia","Amoníaco","NH3","Ammonia"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "4-planar.cml","Cloreto de platina","PtCl4"));
+//  bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "4-planar.cml","Cloreto de platina","PtCl4"));
         //bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "4-tetrahedral.cml","Metano","CH4"));
 //@@@@@@@@@@@@@@@@@@bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "5-square-pyramidal.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "5-trigonal-bipyramidal.cml","Pentacloreto de fósforo","PCl5"));

@@ -138,8 +138,6 @@ public class ReadMolecula {
             int num_of_atoms = Integer.parseInt(reader.readLine().replaceAll("\\s+", ""));
             reader.readLine();
 
-
-
             for (int i = 0; i < num_of_atoms; i++) {
                 line = reader.readLine().trim();
 
