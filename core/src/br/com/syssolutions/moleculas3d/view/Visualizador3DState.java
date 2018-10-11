@@ -287,6 +287,7 @@ public class Visualizador3DState extends State {
                         String token[] = line.split("#img");
 
                         String patchImg = token[1].trim();
+
                         Image image = new Image(new Texture(Gdx.files.internal(patchInfo + patchImg)));
 
                         //image.setSize(100f,100f);
@@ -332,45 +333,44 @@ public class Visualizador3DState extends State {
 
             if (titulo.length() > 13) {
 
-                String nomeDividido ;
-               // titulo = nomeDividido;
+                String nomeDividido;
+                // titulo = nomeDividido;
 
 
-                    if (titulo.charAt(13) == '-' || titulo.charAt(13) == ' ') {
+                if (titulo.charAt(13) == '-' || titulo.charAt(13) == ' ') {
 
-                        System.out.println("CharAt11 - ou \"\" ");
+                    System.out.println("CharAt11 - ou \"\" ");
 
-                        String s1, s2;
+                    String s1, s2;
 
-                        s1 = titulo.substring(0, 13);
-                        s2 = titulo.substring(14, titulo.length());
+                    s1 = titulo.substring(0, 13);
+                    s2 = titulo.substring(14, titulo.length());
 
-                        System.out.println("s1= " + s1);
-                        System.out.println("s2= " + s2);
+                    System.out.println("s1= " + s1);
+                    System.out.println("s2= " + s2);
 
-                        nomeDividido = s1 + "\n" + s2;
-                    }else {
+                    nomeDividido = s1 + "\n" + s2;
+                } else {
 
-                        String s1, s2;
+                    String s1, s2;
 
-                        s1 = titulo.substring(0, 13);
-                        s2 = titulo.substring(13, titulo.length());
-
-
-                            nomeDividido=s1+"-\n"+s2;
+                    s1 = titulo.substring(0, 13);
+                    s2 = titulo.substring(13, titulo.length());
 
 
-                    }
-
-
-                if(nomeDividido.length()>25){
-
-                    nomeDividido=nomeDividido.substring(0,23)+"...";
+                    //nomeDividido=s1+"-\n"+s2;
+                    nomeDividido = s1 + "\n" + s2;
 
 
                 }
 
 
+                if (nomeDividido.length() > 25) {
+
+                    nomeDividido = nomeDividido.substring(0, 23) + "...";
+
+
+                }
 
 
                 labelTitulo = new Label(nomeDividido, labelStyle);

@@ -32,39 +32,38 @@ public abstract class Biblioteca {
         ArrayList<ItemBiblioteca> bibliotecaArrayList = new ArrayList<ItemBiblioteca>();
         //Patch + Name + Sinonimos...)
 
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1_2-oxazole.cml","Isoxazol","Isoxazole","C3H3NO"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1_2-thiazole.cml","Tiazol","thiazole","C3H3NS"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1_3-oxazole.cml","Oxazol","Oxazole","C3H3NO"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1_3-thiazole.cml","Tiazol","Thiazole","C3H3NS"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1H-indene.cml","Indeno","1H-indene","Indene","C9H8"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1H-indole.cml","Indol","Indole","C8H7N"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1H-pyrazole.cml","Pirazol","Pyrazole","C3H4N2"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1H-pyrrole.cml","Pirrol","Pyrrole","1H-Pyrrole","C4H5N"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1_2-oxazole.cml", "Isoxazol", "Isoxazole", "C3H3NO")); //ok
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1_3-oxazole.cml", "Oxazol", "Oxazole", "C3H3NO")); //OK
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1_3-thiazole.cml", "Tiazol", "Thiazole", "C3H3NS", "1,3-tiazol"));//OK
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1H-indene.cml", "Indeno", "1H-indene", "Indene", "C9H8"));//
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1H-indole.cml", "Indol", "Indole", "C8H7N"));//OK
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1H-pyrazole.cml", "Pirazol", "Pyrazole", "C3H4N2"));//ok
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "1H-pyrrole.cml", "Pirrol", "Pyrrole", "1H-Pyrrole", "C4H5N"));//OK
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "2_2_2-trichloroacetic_acid.cml",
-                "Ácido Tricloroacético","Ácido Tricloroetanóico","C2HCl3O2","CCl3COOH","Trichloroacetic acid","2,2,2-trichloroacetic acid"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "2_2_2-trifluoroacetic_acid.cml","Ácido Trifluoroacético","TFA","CF3COOH","C2HF3O2"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "2_2-dichloroacetic_acid.cml","Ácido dicloroacético","DCA","CHCl2COOH","Dichloroacetic acid","C2H2Cl2O2"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "2-methylpropane.cml","isobutano","metil propano","Isobutane","Methylpropane","2-Methylpropane","C4H10"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "3-trigonal-planar.cml","Borano","BH3"));
+                "Ácido Tricloroacético", "Ácido Tricloroetanóico", "C2HCl3O2", "CCl3COOH", "Trichloroacetic acid", "2,2,2-trichloroacetic acid"));// OK
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "2_2_2-trifluoroacetic_acid.cml", "Ácido Trifluoroacético", "TFA", "CF3COOH", "C2HF3O2"));//ok
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "2_2-dichloroacetic_acid.cml", "Ácido dicloroacético", "DCA", "CHCl2COOH", "Dichloroacetic acid", "C2H2Cl2O2")); //ok
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "2-methylpropane.cml", "isobutano", "metil propano", "Isobutane", "Methylpropane", "2-Methylpropane", "C4H10")); //OK
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "3-trigonal-planar.cml", "Borano", "BH3")); //OK
         //bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "3-trigonal-pyramidal.cml","Amônia","Amoníaco","NH3","Ammonia"));
 //  bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "4-planar.cml","Cloreto de platina","PtCl4"));
         //bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "4-tetrahedral.cml","Metano","CH4"));
 //@@@@@@@@@@@@@@@@@@bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "5-square-pyramidal.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "5-trigonal-bipyramidal.cml","Pentacloreto de fósforo","PCl5"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "6-octahedral.cml","feCl6"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "acetaldehyde.cml","Etanal","Acetaldeído","C2H4O"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "acetamide.cml","Acetamida","etanamida","C2H5NO"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "acetic_acid.cml","Ácido etanoico","ácido acético","C2H4O2"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "acetone.cml","Acetona","C3H6O","Propanona"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "acetylene.cml","Acetileno","acetylene","etino","C2H2"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "adamantane.cml","Adamantano","Triciclo[3.3.1.13,7]decano","C10H16"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "adenine.cml","Adenina","DNA","Purina","RNA"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "adna.cml","A-DNA","ADNA"));
+//bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "5-trigonal-bipyramidal.cml","Pentacloreto de fósforo","PCl5"));
+//bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "6-octahedral.cml","feCl6"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "acetaldehyde.cml", "Etanal", "Acetaldeído", "C2H4O"));//OK
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "acetamide.cml", "Acetamida", "etanamida", "C2H5NO"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "acetic_acid.cml", "Ácido etanoico", "ácido acético", "acetic acid", "C2H4O2"));//OK
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "acetone.cml", "Acetona", "C3H6O", "Propanona"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "acetylene.cml", "Acetileno", "acetylene", "etino", "C2H2"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "adamantane.cml", "Adamantano", "Triciclo[3.3.1.13,7]decano", "C10H16"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "adenine.cml", "Adenina", "DNA", "Purina", "RNA"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "adna.cml", "A-DNA", "ADNA"));
 //@@@@@@@@@@@@@@@@@@bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-D-allopyranose.cml","Alose","C6H12O6"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-D-arabinopyranose.cml","α-d-Arabinose","α-D-Arabinopyranose","a-D-Arabinopyranose","a-d-Arabinose","C5H10O5"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-D-fucopyranose.cml","Fucose","C6H12O5","6-metiltetrahidro-2H-pirano-2,3,4,5-tetraol"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-D-galactopyranose.cml","Galactose","α-D-Galactopyranose","C6H12O6"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-D-allopyranose.cml", "Alose", "C6H12O6"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-D-arabinopyranose.cml", "α-d-Arabinose", "α-D-Arabinopyranose", "a-D-Arabinopyranose", "a-d-Arabinose", "C5H10O5"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-D-fucopyranose.cml", "Fucose", "C6H12O5", "6-metiltetrahidro-2H-pirano-2,3,4,5-tetraol"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-D-galactopyranose.cml", "Galactose", "α-D-Galactopyranose", "C6H12O6"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-D-galacturonopyranose.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-D-glucopyranose.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-D-glucuronopyranose.cml"));
@@ -86,18 +85,18 @@ public abstract class Biblioteca {
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-L-ribopyranose.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-L-sorbopyranose.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "alpha-L-xylopyranose.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "ammonia.cml","Amônia","Amoníaco","NH3","Ammonia"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "aniline.cml","Anilina","aniline","C6H7N"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "anisole.cml","Anisol","Anisole","C7H8O"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "anthracene.cml","Antraceno","anthracene","C14H10"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "ammonia.cml", "Amônia", "Amoníaco", "NH3", "Ammonia"));//OK
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "aniline.cml", "Anilina", "aniline", "C6H7N"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "anisole.cml", "Anisol", "Anisole", "C7H8O"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "anthracene.cml", "Antraceno", "anthracene", "C14H10"));
 //bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "at-adna.cml"));
 //bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "at-bdna.cml"));
 //bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "at-zdna.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "azepane.cml","Azepano","Hexaidroazepina","C6H13N"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "b12.cml","B12","cobalamina","cianocobalamina","C63H88CoN14O14P","Vitamina B12"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "bdna.cml","B-DNA"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "benzaldehyde.cml","Benzaldeído","benzaldehyde","C7H6O"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "benzene.cml","Benzeno","C6H6"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "azepane.cml", "Azepano", "Hexaidroazepina", "C6H13N"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "b12.cml", "B12", "cobalamina", "cianocobalamina", "C63H88CoN14O14P", "Vitamina B12"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "bdna.cml", "B-DNA"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "benzaldehyde.cml", "Benzaldeído", "benzaldehyde", "C7H6O"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "benzene.cml", "Benzeno", "C6H6"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "benzofuran.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "benzoic_acid.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "benzothiophene.cml"));
@@ -130,7 +129,7 @@ public abstract class Biblioteca {
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "caffeine.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "chloro_a.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cholesterol.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "citric_acid.cml","Ácido cítrico","citric acid","citrato de hidrogênio","ácido 2-hidroxi-1,2,3-propanotricarboxílico","C6H8O7"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "citric_acid.cml", "Ácido cítrico", "citric acid", "citrato de hidrogênio", "ácido 2-hidroxi-1,2,3-propanotricarboxílico", "C6H8O7"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "coa.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cubane.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cyclobutane.cml"));
@@ -138,11 +137,11 @@ public abstract class Biblioteca {
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cyclohexane.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cyclopentane.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cyclopropane.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cytosine.cml","Citosina","dna","cytosine"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "cytosine.cml", "Citosina", "dna", "cytosine"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "D-alanine.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "d-allose.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "D-allo-threonine.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "d-altrose.cml","Altrose","C6H12O6"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "d-altrose.cml", "Altrose", "C6H12O6"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "d-arabinose.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "D-arginine.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "D-asparagine.cml"));
@@ -208,7 +207,7 @@ public abstract class Biblioteca {
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "gc-bdna.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "gc-zdna.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "glycine.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "guanine.cml","Guanina","Guanine","Purina","DNA", "ADN"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "guanine.cml", "Guanina", "Guanine", "Purina", "DNA", "ADN"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "heme.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "hexanoic_acid.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "isobutyric_acid.cml"));
@@ -239,7 +238,7 @@ public abstract class Biblioteca {
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "L-tryptophan.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "L-tyrosine.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "L-valine.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "methane.cml","Metano","methane","CH4"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "methane.cml", "Metano", "methane", "CH4"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "methanethiol.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "methanol.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "methylamine.cml"));
@@ -263,25 +262,25 @@ public abstract class Biblioteca {
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "propanoic_acid.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "propyne.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "pyr.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "pyridine.cml","Piridina","pyridine"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "pyridine.cml", "Piridina", "pyridine"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "ribo.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "stearic_acid.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "testosterone.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "tetrahydrofuran.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "thiamine.cml"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "thiophene.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "thymine.cml","Timina","thymine","Adn","dna","C5H6N2O2"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "thymine.cml", "Timina", "thymine", "Adn", "dna", "C5H6N2O2"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "toluene.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "uracil.cml","Uracilo","uracil","uracila","rna","C4H4N2O2","1H-Pyrimidine-2,4-dione"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "uracil.cml", "Uracilo", "uracil", "uracila", "rna", "C4H4N2O2", "1H-Pyrimidine-2,4-dione"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "urea.cml"));
-        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "water.cml", "Água", "H2O", "Water","Oxidane"));
+        bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "water.cml", "Água", "H2O", "Water", "Oxidane"));
         bibliotecaArrayList.add(new ItemBiblioteca(MOLFOLDER, "zdna.cml"));
 
 
         for (ItemBiblioteca item : bibliotecaArrayList) {
 
 
-           // System.out.println("allNames: "+item.getAllNames());
+            // System.out.println("allNames: "+item.getAllNames());
 
             biblioteca.put(item.getName(0), item);
 
